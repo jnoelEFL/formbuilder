@@ -3,7 +3,7 @@ Formbuilder.registerField 'text',
   order: 0
 
   view: """
-    <input type='text' class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>' />
+    <input type='text' class='form-control input<%= rf.get(Formbuilder.options.mappings.SIZE) %>' />
   """
 
   edit: """
@@ -16,5 +16,6 @@ Formbuilder.registerField 'text',
   """
 
   defaultAttributes: (attrs) ->
-    attrs.field_options.size = 'small'
+    attrs.field_options.size = '-sm'
+    attrs.fieldCol = '5'
     attrs

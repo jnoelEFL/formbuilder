@@ -109,7 +109,7 @@
     ViewFieldView.prototype.className = "fb-field-wrapper";
 
     ViewFieldView.prototype.events = {
-      'click .subtemplate-wrapper': 'focusEditView',
+      'click .form-group': 'focusEditView',
       'click .js-duplicate': 'duplicate',
       'click .js-clear': 'clear'
     };
@@ -555,6 +555,7 @@
         var attrs, _base;
         attrs = {};
         attrs[Formbuilder.options.mappings.LABEL] = 'Untitled';
+        attrs[Formbuilder.options.mappings.LABEL_COL] = '7';
         attrs[Formbuilder.options.mappings.FIELD_TYPE] = field_type;
         attrs[Formbuilder.options.mappings.REQUIRED] = true;
         attrs['field_options'] = {};
@@ -572,10 +573,13 @@
       AUTOSAVE: true,
       CLEAR_FIELD_CONFIRM: false,
       mappings: {
+        ID: 'id',
         SIZE: 'field_options.size',
         UNITS: 'field_options.units',
         LABEL: 'label',
+        LABEL_COL: 'labelCol',
         FIELD_TYPE: 'field_type',
+        FIELD_COL: 'fieldCol',
         REQUIRED: 'required',
         ADMIN_ONLY: 'admin_only',
         OPTIONS: 'field_options.options',
@@ -794,11 +798,12 @@
 (function() {
   Formbuilder.registerField('text', {
     order: 0,
-    view: "<input type='text' class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>' />",
+    view: "<input type='text' class='form-control input<%= rf.get(Formbuilder.options.mappings.SIZE) %>' />",
     edit: "<%= Formbuilder.templates['edit/size']() %>\n<%= Formbuilder.templates['edit/min_max_length']() %>",
     addButton: "<span class='symbol'><span class='fa fa-font'></span></span> Text",
     defaultAttributes: function(attrs) {
-      attrs.field_options.size = 'small';
+      attrs.field_options.size = '-sm';
+      attrs.fieldCol = '5';
       return attrs;
     }
   });
@@ -894,7 +899,9 @@ __p += '<div class=\'fb-edit-section-header\'>Label</div>\n\n<div class=\'fb-com
 ((__t = ( Formbuilder.templates['edit/label_description']() )) == null ? '' : __t) +
 '\n  </div>\n  <div class=\'fb-common-checkboxes\'>\n    ' +
 ((__t = ( Formbuilder.templates['edit/checkboxes']() )) == null ? '' : __t) +
-'\n  </div>\n  <div class=\'fb-clear\'></div>\n</div>\n';
+'\n  </div>\n  <label for="selectInputColSize">Input Column Size</label>\n  <select id="selectInputColSize" data-rv-value="model.' +
+((__t = ( Formbuilder.options.mappings.FIELD_COL )) == null ? '' : __t) +
+'">\n    <option value="1">1</option>\n    <option value="2">2</option>\n    <option value="3">3</option>\n    <option value="4">4</option>\n    <option value="5">5</option>\n    <option value="6">6</option>\n    <option value="7">7</option>\n    <option value="8">8</option>\n    <option value="9">9</option>\n    <option value="10">10</option>\n    <option value="11">11</option>\n    <option value="12">12</option>\n  </select>\n  <div class=\'fb-clear\'></div>\n</div>\n';
 
 }
 return __p
@@ -920,7 +927,9 @@ __p += '<input type=\'text\' data-rv-input=\'model.' +
 ((__t = ( Formbuilder.options.mappings.LABEL )) == null ? '' : __t) +
 '\' />\n<textarea data-rv-input=\'model.' +
 ((__t = ( Formbuilder.options.mappings.DESCRIPTION )) == null ? '' : __t) +
-'\'\n  placeholder=\'Add a longer description to this field\'></textarea>';
+'\'\n  placeholder=\'Add a longer description to this field\'></textarea>\n<label for="selectLabelColSize">Label Column Size</label>\n<select id="selectLabelColSize" data-rv-value="model.' +
+((__t = ( Formbuilder.options.mappings.LABEL_COL )) == null ? '' : __t) +
+'">\n  <option value="1">1</option>\n  <option value="2">2</option>\n  <option value="3">3</option>\n  <option value="4">4</option>\n  <option value="5">5</option>\n  <option value="6">6</option>\n  <option value="7">7</option>\n  <option value="8">8</option>\n  <option value="9">9</option>\n  <option value="10">10</option>\n  <option value="11">11</option>\n  <option value="12">12</option>\n</select>\n';
 
 }
 return __p
@@ -993,7 +1002,7 @@ var __t, __p = '', __e = _.escape;
 with (obj) {
 __p += '<div class=\'fb-edit-section-header\'>Size</div>\n<select data-rv-value="model.' +
 ((__t = ( Formbuilder.options.mappings.SIZE )) == null ? '' : __t) +
-'">\n  <option value="small">Small</option>\n  <option value="medium">Medium</option>\n  <option value="large">Large</option>\n</select>\n';
+'">\n  <option value="-sm">Small</option>\n  <option value="-md">Medium</option>\n  <option value="-lg">Large</option>\n</select>\n';
 
 }
 return __p
@@ -1086,7 +1095,7 @@ this["Formbuilder"]["templates"]["partials/right_side"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'fb-right\'>\n  <div class=\'fb-no-response-fields\'>No response fields</div>\n  <div class=\'fb-response-fields\'></div>\n</div>\n';
+__p += '<div class=\'fb-right\'>\n  <div class=\'fb-no-response-fields\'>No response fields</div>\n  <form class="form-horizontal">\n    <div class=\'fb-response-fields\'></div>\n  </form>\n</div>\n';
 
 }
 return __p
@@ -1108,13 +1117,11 @@ this["Formbuilder"]["templates"]["view/base"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'subtemplate-wrapper\'>\n  <div class=\'cover\'></div>\n  ' +
+__p += '<div class=\'form-group\'>\n  <div class=\'cover\'></div>\n  ' +
 ((__t = ( Formbuilder.templates['view/label']({rf: rf}) )) == null ? '' : __t) +
 '\n\n  ' +
-((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].view({rf: rf}) )) == null ? '' : __t) +
+((__t = ( Formbuilder.templates['view/input']({rf: rf}) )) == null ? '' : __t) +
 '\n\n  ' +
-((__t = ( Formbuilder.templates['view/description']({rf: rf}) )) == null ? '' : __t) +
-'\n  ' +
 ((__t = ( Formbuilder.templates['view/duplicate_remove']({rf: rf}) )) == null ? '' : __t) +
 '\n</div>\n';
 
@@ -1158,18 +1165,36 @@ __p += '<div class=\'actions-wrapper\'>\n  <a class="js-duplicate ' +
 return __p
 };
 
+this["Formbuilder"]["templates"]["view/input"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<div class="col-sm-' +
+((__t = ( rf.get(Formbuilder.options.mappings.FIELD_COL) )) == null ? '' : __t) +
+'">\n  ' +
+((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].view({rf: rf}) )) == null ? '' : __t) +
+'\n  <span class=\'help-block\'>\n    ' +
+((__t = ( Formbuilder.helpers.simple_format(rf.get(Formbuilder.options.mappings.DESCRIPTION)) )) == null ? '' : __t) +
+'\n  </span>\n</div>\n';
+
+}
+return __p
+};
+
 this["Formbuilder"]["templates"]["view/label"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
-__p += '<label>\n  <span>' +
-((__t = ( Formbuilder.helpers.simple_format(rf.get(Formbuilder.options.mappings.LABEL)) )) == null ? '' : __t) +
-'\n  ';
+__p += '<label class="col-sm-';
+ print(rf.get(Formbuilder.options.mappings.LABEL_COL)) ;
+__p += ' control-label ';
  if (rf.get(Formbuilder.options.mappings.REQUIRED)) { ;
-__p += '\n    <abbr title=\'required\'>*</abbr>\n  ';
- } ;
-__p += '\n</label>\n';
+__p += 'required ';
+};
+__p += '">\n  ' +
+((__t = ( Formbuilder.helpers.simple_format(rf.get(Formbuilder.options.mappings.LABEL)) )) == null ? '' : __t) +
+'\n</label>\n';
 
 }
 return __p

@@ -4,7 +4,9 @@
   <title>Form Builder</title>
   <meta name="description" content="">
   <link rel="stylesheet" href="vendor/css/vendor.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
   <link rel="stylesheet" href="dist/formbuilder.css" />
+
   <style>
   * {
     box-sizing: border-box;
@@ -36,6 +38,7 @@
   <div class='fb-main'></div>
 
   <script src="vendor/js/vendor.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
   <script src="dist/formbuilder.js"></script>
 
   <script>
@@ -45,21 +48,27 @@
         bootstrapData: [
           {
             "label": "Do you have a website?",
+            "labelCol": "7",
             "field_type": "website",
+            "fieldCol": "5",
             "required": false,
             "field_options": {},
             "cid": "c1"
           },
           {
             "label": "Please enter your clearance number",
+            "labelCol": "7",
             "field_type": "text",
+            "fieldCol": "5",
             "required": true,
             "field_options": {},
             "cid": "c6"
           },
           {
             "label": "Security personnel #82?",
+            "labelCol": "7",
             "field_type": "radio",
+            "fieldCol": "5",
             "required": true,
             "field_options": {
                 "options": [{
@@ -72,13 +81,6 @@
                 "include_other_option": true
             },
             "cid": "c10"
-          },
-          {
-            "label": "Medical history",
-            "field_type": "file",
-            "required": true,
-            "field_options": {},
-            "cid": "c14"
           }
         ]
       });

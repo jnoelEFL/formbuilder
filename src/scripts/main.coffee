@@ -24,7 +24,7 @@ class ViewFieldView extends Backbone.View
   className: "fb-field-wrapper"
 
   events:
-    'click .subtemplate-wrapper': 'focusEditView'
+    'click .form-group': 'focusEditView'
     'click .js-duplicate': 'duplicate'
     'click .js-clear': 'clear'
 
@@ -359,6 +359,7 @@ class Formbuilder
     defaultFieldAttrs: (field_type) ->
       attrs = {}
       attrs[Formbuilder.options.mappings.LABEL] = 'Untitled'
+      attrs[Formbuilder.options.mappings.LABEL_COL] = '7'
       attrs[Formbuilder.options.mappings.FIELD_TYPE] = field_type
       attrs[Formbuilder.options.mappings.REQUIRED] = true
       attrs['field_options'] = {}
@@ -375,10 +376,13 @@ class Formbuilder
     CLEAR_FIELD_CONFIRM: false
 
     mappings:
+      ID: 'id'
       SIZE: 'field_options.size'
       UNITS: 'field_options.units'
       LABEL: 'label'
+      LABEL_COL: 'labelCol'
       FIELD_TYPE: 'field_type'
+      FIELD_COL: 'fieldCol'
       REQUIRED: 'required'
       ADMIN_ONLY: 'admin_only'
       OPTIONS: 'field_options.options'
