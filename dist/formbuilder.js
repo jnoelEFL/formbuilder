@@ -853,11 +853,13 @@ this["Formbuilder"]["templates"]["edit/base_header"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'fb-field-label\'>\n  <span data-rv-text="model.' +
+__p += '<div class=\'fb-field-label\'>\n  <code class="field-id" data-rv-text="model.' +
+((__t = ( Formbuilder.options.mappings.ID )) == null ? '' : __t) +
+'"></code>\n  <span data-rv-text="model.' +
 ((__t = ( Formbuilder.options.mappings.LABEL )) == null ? '' : __t) +
 '"></span>\n  <code class=\'field-type\' data-rv-text=\'model.' +
 ((__t = ( Formbuilder.options.mappings.FIELD_TYPE )) == null ? '' : __t) +
-'\'></code>\n  <span class=\'fa fa-arrow-right pull-right\'></span>\n</div>';
+'\'></code>\n  <span class=\'fa fa-arrow-right pull-right\'></span>\n</div>\n';
 
 }
 return __p
@@ -895,13 +897,27 @@ this["Formbuilder"]["templates"]["edit/common"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'fb-edit-section-header\'>Label</div>\n\n<div class=\'fb-common-wrapper\'>\n  <div class=\'fb-label-description\'>\n    ' +
+__p += '<div class=\'fb-common-wrapper\'>\n  ' +
+((__t = ( Formbuilder.templates['edit/id']() )) == null ? '' : __t) +
+'\n</div>\n<div class=\'fb-edit-section-header\'>Label</div>\n\n<div class=\'fb-common-wrapper\'>\n  <div class=\'fb-label-description\'>\n    ' +
 ((__t = ( Formbuilder.templates['edit/label_description']() )) == null ? '' : __t) +
 '\n  </div>\n  <div class=\'fb-common-checkboxes\'>\n    ' +
 ((__t = ( Formbuilder.templates['edit/checkboxes']() )) == null ? '' : __t) +
 '\n  </div>\n  <label for="selectInputColSize">Input Column Size</label>\n  <select id="selectInputColSize" data-rv-value="model.' +
 ((__t = ( Formbuilder.options.mappings.FIELD_COL )) == null ? '' : __t) +
 '">\n    <option value="1">1</option>\n    <option value="2">2</option>\n    <option value="3">3</option>\n    <option value="4">4</option>\n    <option value="5">5</option>\n    <option value="6">6</option>\n    <option value="7">7</option>\n    <option value="8">8</option>\n    <option value="9">9</option>\n    <option value="10">10</option>\n    <option value="11">11</option>\n    <option value="12">12</option>\n  </select>\n  <div class=\'fb-clear\'></div>\n</div>\n';
+
+}
+return __p
+};
+
+this["Formbuilder"]["templates"]["edit/id"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<div class="fb-common-id">\n  <label for="inputID">ID</label>\n  <input type="text" id="inputID" data-rv-input="model.' +
+((__t = ( Formbuilder.options.mappings.ID )) == null ? '' : __t) +
+'" />\n</div>\n';
 
 }
 return __p
@@ -1107,7 +1123,7 @@ var __t, __p = '', __e = _.escape;
 with (obj) {
 __p += '<div class=\'fb-save-wrapper\'>\n  <button class=\'js-save-form ' +
 ((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
-'\'></button>\n</div>';
+'\'></button>\n</div>\n';
 
 }
 return __p

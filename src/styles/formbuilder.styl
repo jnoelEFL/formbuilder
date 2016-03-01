@@ -302,6 +302,17 @@ $editing-border = darken($editing-bg, 7%)
     }
   }
 
+  .field-id {
+    margin-bottom: .5em;
+    display: block;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 1em;
+    &:before {
+      content: 'ID: ';
+      color: #999;
+    }
+  }
+
   .fa.fa-arrow-right {
     display: none;
   }
@@ -335,6 +346,11 @@ $editing-border = darken($editing-bg, 7%)
 .fb-common-wrapper .fb-label-description textarea {
   min-height: 5em;
 }
+
+.fb-common-wrapper .fb-common-id  {
+  margin-top: 10px;
+}
+
 
 .response-field-draggable-helper {
   border: 1px dashed #ddd;
