@@ -317,6 +317,7 @@
       this.$el.html(Formbuilder.templates['page']());
       this.$fbLeft = this.$el.find('.fb-left');
       this.$responseFields = this.$el.find('.fb-response-fields');
+      this.$codePreview = this.$el.find('#textCode');
       this.bindWindowScrollEvent();
       this.hideShowNoResponseFields();
       _ref5 = this.SUBVIEWS;
@@ -515,6 +516,9 @@
       payload = JSON.stringify({
         fields: this.collection.toJSON()
       });
+      this.$codePreview.val(JSON.stringify({
+        fields: this.collection.toJSON()
+      }, void 0, 4));
       if (Formbuilder.options.HTTP_ENDPOINT) {
         this.doAjaxSave(payload);
       }
@@ -1111,7 +1115,7 @@ this["Formbuilder"]["templates"]["partials/right_side"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'fb-right\'>\n  <div class=\'fb-no-response-fields\'>No response fields</div>\n  <form class="form-horizontal">\n    <div class=\'fb-response-fields\'></div>\n  </form>\n</div>\n';
+__p += '<div class=\'fb-right\'>\n  <ul class=\'fb-tabs\'>\n    <li class=\'active\'><a data-target=\'#preview\'>Preview</a></li>\n    <li><a data-target=\'#code\'>Code</a></li>\n  </ul>\n  <div class=\'fb-tab-content\'>\n    <div class=\'fb-tab-pane active\' id=\'preview\'>\n      <div class=\'fb-no-response-fields\'>No response fields</div>\n      <form class="form-horizontal">\n        <div class=\'fb-response-fields\'></div>\n      </form>\n    </div>\n    <div class=\'fb-tab-pane\' id=\'code\'>\n      <textarea id="textCode" class="fb-code-preview" readonly="readonly" cols=50 rows=25></textarea>\n    </div>\n  </div>\n</div>\n';
 
 }
 return __p

@@ -1,6 +1,17 @@
 <div class='fb-right'>
-  <div class='fb-no-response-fields'>No response fields</div>
-  <form class="form-horizontal">
-    <div class='fb-response-fields'></div>
-  </form>
+  <ul class='fb-tabs'>
+    <li class='active'><a data-target='#preview'>Preview</a></li>
+    <li><a data-target='#code'>Code</a></li>
+  </ul>
+  <div class='fb-tab-content'>
+    <div class='fb-tab-pane active' id='preview'>
+      <div class='fb-no-response-fields'>No response fields</div>
+      <form class="form-horizontal">
+        <div class='fb-response-fields'></div>
+      </form>
+    </div>
+    <div class='fb-tab-pane' id='code'>
+      <textarea id="textCode" class="fb-code-preview" readonly="readonly" cols=50 rows=25></textarea>
+    </div>
+  </div>
 </div>

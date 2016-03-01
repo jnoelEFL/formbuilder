@@ -180,6 +180,7 @@ class BuilderView extends Backbone.View
     # Save jQuery objects for easy use
     @$fbLeft = @$el.find('.fb-left')
     @$responseFields = @$el.find('.fb-response-fields')
+    @$codePreview = @$el.find('#textCode')
 
     @bindWindowScrollEvent()
     @hideShowNoResponseFields()
@@ -332,8 +333,10 @@ class BuilderView extends Backbone.View
     @formSaved = true
     @saveFormButton.attr('disabled', true).text(Formbuilder.options.dict.ALL_CHANGES_SAVED)
     @collection.sort()
-    
+
     payload = JSON.stringify fields: @collection.toJSON()
+
+    @$codePreview.val(JSON.stringify fields: @collection.toJSON(), undefined, 4)
 
     if Formbuilder.options.HTTP_ENDPOINT then @doAjaxSave(payload)
     @formBuilder.trigger 'save', payload
