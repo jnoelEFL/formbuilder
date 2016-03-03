@@ -4,7 +4,7 @@ class FormbuilderModel extends Backbone.DeepModel
     $wrapper = $(".fb-field-wrapper").filter ( (_, el) => $(el).data('cid') == @cid  )
     $(".fb-field-wrapper").index $wrapper
   is_input: ->
-    Formbuilder.inputFields[@get(Formbuilder.options.mappings.FIELD_TYPE)]?
+    Formbuilder.inputFields[@get(Formbuilder.options.mappings.CONTROL)]?
 
 
 class FormbuilderCollection extends Backbone.Collection
@@ -34,7 +34,7 @@ class ViewFieldView extends Backbone.View
     @listenTo @model, "destroy", @remove
 
   render: ->
-    @$el.addClass('response-field-' + @model.get(Formbuilder.options.mappings.FIELD_TYPE))
+    @$el.addClass('response-field-' + @model.get(Formbuilder.options.mappings.CONTROL))
         .data('cid', @model.cid)
         .html(Formbuilder.templates["view/base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model}))
 
@@ -119,7 +119,7 @@ class EditFieldView extends Backbone.View
   defaultUpdated: (e) ->
     $el = $(e.currentTarget)
 
-    unless @model.get(Formbuilder.options.mappings.FIELD_TYPE) == 'checkboxes' # checkboxes can have multiple options selected
+    unless @model.get(Formbuilder.options.mappings.CONTROL) == 'checkboxes' # checkboxes can have multiple options selected
       @$el.find(".js-default-updated").not($el).attr('checked', false).trigger('change')
 
     @forceRender()
@@ -134,9 +134,9 @@ class BuilderView extends Backbone.View
   events:
     'click .js-save-form': 'saveForm'
     'click .fb-tabs a': 'showTab'
-    'click .fb-add-field-types a': 'addField'
-    'mouseover .fb-add-field-types': 'lockLeftWrapper'
-    'mouseout .fb-add-field-types': 'unlockLeftWrapper'
+    'click .fb-add-controls a': 'addField'
+    'mouseover .fb-add-controls': 'lockLeftWrapper'
+    'mouseout .fb-add-controls': 'unlockLeftWrapper'
 
   initialize: (options) ->
     {selector, @formBuilder, @bootstrapData} = options
@@ -181,6 +181,7 @@ class BuilderView extends Backbone.View
     @$fbLeft = @$el.find('.fb-left')
     @$responseFields = @$el.find('.fb-response-fields')
     @$codePreview = @$el.find('#textCode')
+    @$inputPreview = @$el.find('#textInputs')
 
     @bindWindowScrollEvent()
     @hideShowNoResponseFields()
@@ -244,20 +245,20 @@ class BuilderView extends Backbone.View
       forcePlaceholderSize: true
       placeholder: 'sortable-placeholder'
       stop: (e, ui) =>
-        if ui.item.data('field-type')
-          rf = @collection.create Formbuilder.helpers.defaultFieldAttrs(ui.item.data('field-type')), {$replaceEl: ui.item}
+        if ui.item.data('control')
+          rf = @collection.create Formbuilder.helpers.defaultFieldAttrs(ui.item.data('control')), {$replaceEl: ui.item}
           @createAndShowEditView(rf)
 
         @handleFormUpdate()
         return true
       update: (e, ui) =>
         # ensureEditViewScrolled, unless we're updating from the draggable
-        @ensureEditViewScrolled() unless ui.item.data('field-type')
+        @ensureEditViewScrolled() unless ui.item.data('control')
 
     @setDraggable()
 
   setDraggable: ->
-    $addFieldButtons = @$el.find("[data-field-type]")
+    $addFieldButtons = @$el.find("[data-control]")
 
     $addFieldButtons.draggable
       connectToSortable: @$responseFields
@@ -277,8 +278,8 @@ class BuilderView extends Backbone.View
     @$el.find(".fb-no-response-fields")[if @collection.length > 0 then 'hide' else 'show']()
 
   addField: (e) ->
-    field_type = $(e.currentTarget).data('field-type')
-    @createField Formbuilder.helpers.defaultFieldAttrs(field_type)
+    control = $(e.currentTarget).data('control')
+    @createField Formbuilder.helpers.defaultFieldAttrs(control)
 
   createField: (attrs, options) ->
     rf = @collection.create attrs, options
@@ -334,9 +335,18 @@ class BuilderView extends Backbone.View
     @saveFormButton.attr('disabled', true).text(Formbuilder.options.dict.ALL_CHANGES_SAVED)
     @collection.sort()
 
-    payload = JSON.stringify fields: @collection.toJSON()
+    jsonFields = @collection.toJSON()
+    payload = JSON.stringify fields: jsonFields
 
-    @$codePreview.val(JSON.stringify fields: @collection.toJSON(), undefined, 4)
+    @$codePreview.val(JSON.stringify fields: jsonFields, undefined, 4)
+
+    lstName = {}
+
+    for key in jsonFields
+      id = key.name
+      if id then lstName[id] = ''
+
+    @$inputPreview.val(JSON.stringify lstName, undefined, 4)
 
     if Formbuilder.options.HTTP_ENDPOINT then @doAjaxSave(payload)
     @formBuilder.trigger 'save', payload
@@ -360,14 +370,14 @@ class BuilderView extends Backbone.View
 
 class Formbuilder
   @helpers:
-    defaultFieldAttrs: (field_type) ->
+    defaultFieldAttrs: (control) ->
       attrs = {}
       attrs[Formbuilder.options.mappings.LABEL] = 'Untitled'
       attrs[Formbuilder.options.mappings.LABEL_COL] = '7'
-      attrs[Formbuilder.options.mappings.FIELD_TYPE] = field_type
+      attrs[Formbuilder.options.mappings.CONTROL] = control
       attrs[Formbuilder.options.mappings.REQUIRED] = true
       attrs['field_options'] = {}
-      Formbuilder.fields[field_type].defaultAttributes?(attrs) || attrs
+      Formbuilder.fields[control].defaultAttributes?(attrs) || attrs
 
     simple_format: (x) ->
       x?.replace(/\n/g, '<br />')
@@ -380,12 +390,12 @@ class Formbuilder
     CLEAR_FIELD_CONFIRM: false
 
     mappings:
-      ID: 'id'
+      NAME: 'name'
       SIZE: 'field_options.size'
       UNITS: 'field_options.units'
       LABEL: 'label'
       LABEL_COL: 'labelCol'
-      FIELD_TYPE: 'field_type'
+      CONTROL: 'control'
       FIELD_COL: 'fieldCol'
       REQUIRED: 'required'
       ADMIN_ONLY: 'admin_only'
@@ -399,6 +409,7 @@ class Formbuilder
       MINLENGTH: 'field_options.minlength'
       MAXLENGTH: 'field_options.maxlength'
       LENGTH_UNITS: 'field_options.min_max_length_units'
+      EXTRA_CLASSES: 'extraClasses'
 
     dict:
       ALL_CHANGES_SAVED: 'All changes saved'
@@ -413,7 +424,7 @@ class Formbuilder
     for x in ['view', 'edit']
       opts[x] = _.template(opts[x])
 
-    opts.field_type = name
+    opts.control = name
 
     Formbuilder.fields[name] = opts
 

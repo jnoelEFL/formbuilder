@@ -1,24 +1,22 @@
-Formbuilder.registerField 'price',
+Formbuilder.registerField 'inputFormat',
 
   order: 45
 
   view: """
-    <div class='input-line'>
-      <span class='above-line'>$</span>
-      <span class='dolars'>
-        <input type='text' />
-        <label>Dollars</label>
-      </span>
-      <span class='above-line'>.</span>
-      <span class='cents'>
-        <input type='text' />
-        <label>Cents</label>
-      </span>
+    <div class="input-group input-group-sm">
+      <input type="text" class="form-control">
+      <div class="input-group-addon"><%= rf.get(Formbuilder.options.mappings.UNITS) %></div>
     </div>
   """
 
-  edit: ""
+  edit: """
+    <%= Formbuilder.templates['edit/units']() %>
+  """
 
   addButton: """
-    <span class="symbol"><span class="fa fa-usd"></span></span> Price
+    <span class="symbol"><span class="fa fa-eur"></span></span> Money
   """
+
+  defaultAttributes: (attrs) ->
+    attrs.fieldCol = '5'
+    attrs

@@ -1,5 +1,5 @@
 <div class="col-sm-<%= rf.get(Formbuilder.options.mappings.FIELD_COL) %>">
-  <%= Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].view({rf: rf}) %>
+  <%= Formbuilder.fields[rf.get(Formbuilder.options.mappings.CONTROL)].view({rf: rf}) %>
   <span class='help-block'>
     <%= Formbuilder.helpers.simple_format(rf.get(Formbuilder.options.mappings.DESCRIPTION)) %>
   </span>

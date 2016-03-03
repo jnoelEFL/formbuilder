@@ -65,7 +65,7 @@
     };
 
     FormbuilderModel.prototype.is_input = function() {
-      return Formbuilder.inputFields[this.get(Formbuilder.options.mappings.FIELD_TYPE)] != null;
+      return Formbuilder.inputFields[this.get(Formbuilder.options.mappings.CONTROL)] != null;
     };
 
     return FormbuilderModel;
@@ -121,7 +121,7 @@
     };
 
     ViewFieldView.prototype.render = function() {
-      this.$el.addClass('response-field-' + this.model.get(Formbuilder.options.mappings.FIELD_TYPE)).data('cid', this.model.cid).html(Formbuilder.templates["view/base" + (!this.model.is_input() ? '_non_input' : '')]({
+      this.$el.addClass('response-field-' + this.model.get(Formbuilder.options.mappings.CONTROL)).data('cid', this.model.cid).html(Formbuilder.templates["view/base" + (!this.model.is_input() ? '_non_input' : '')]({
         rf: this.model
       }));
       return this;
@@ -239,7 +239,7 @@
     EditFieldView.prototype.defaultUpdated = function(e) {
       var $el;
       $el = $(e.currentTarget);
-      if (this.model.get(Formbuilder.options.mappings.FIELD_TYPE) !== 'checkboxes') {
+      if (this.model.get(Formbuilder.options.mappings.CONTROL) !== 'checkboxes') {
         this.$el.find(".js-default-updated").not($el).attr('checked', false).trigger('change');
       }
       return this.forceRender();
@@ -266,9 +266,9 @@
     BuilderView.prototype.events = {
       'click .js-save-form': 'saveForm',
       'click .fb-tabs a': 'showTab',
-      'click .fb-add-field-types a': 'addField',
-      'mouseover .fb-add-field-types': 'lockLeftWrapper',
-      'mouseout .fb-add-field-types': 'unlockLeftWrapper'
+      'click .fb-add-controls a': 'addField',
+      'mouseover .fb-add-controls': 'lockLeftWrapper',
+      'mouseout .fb-add-controls': 'unlockLeftWrapper'
     };
 
     BuilderView.prototype.initialize = function(options) {
@@ -318,6 +318,7 @@
       this.$fbLeft = this.$el.find('.fb-left');
       this.$responseFields = this.$el.find('.fb-response-fields');
       this.$codePreview = this.$el.find('#textCode');
+      this.$inputPreview = this.$el.find('#textInputs');
       this.bindWindowScrollEvent();
       this.hideShowNoResponseFields();
       _ref5 = this.SUBVIEWS;
@@ -388,8 +389,8 @@
         placeholder: 'sortable-placeholder',
         stop: function(e, ui) {
           var rf;
-          if (ui.item.data('field-type')) {
-            rf = _this.collection.create(Formbuilder.helpers.defaultFieldAttrs(ui.item.data('field-type')), {
+          if (ui.item.data('control')) {
+            rf = _this.collection.create(Formbuilder.helpers.defaultFieldAttrs(ui.item.data('control')), {
               $replaceEl: ui.item
             });
             _this.createAndShowEditView(rf);
@@ -398,7 +399,7 @@
           return true;
         },
         update: function(e, ui) {
-          if (!ui.item.data('field-type')) {
+          if (!ui.item.data('control')) {
             return _this.ensureEditViewScrolled();
           }
         }
@@ -409,7 +410,7 @@
     BuilderView.prototype.setDraggable = function() {
       var $addFieldButtons,
         _this = this;
-      $addFieldButtons = this.$el.find("[data-field-type]");
+      $addFieldButtons = this.$el.find("[data-control]");
       return $addFieldButtons.draggable({
         connectToSortable: this.$responseFields,
         helper: function() {
@@ -434,9 +435,9 @@
     };
 
     BuilderView.prototype.addField = function(e) {
-      var field_type;
-      field_type = $(e.currentTarget).data('field-type');
-      return this.createField(Formbuilder.helpers.defaultFieldAttrs(field_type));
+      var control;
+      control = $(e.currentTarget).data('control');
+      return this.createField(Formbuilder.helpers.defaultFieldAttrs(control));
     };
 
     BuilderView.prototype.createField = function(attrs, options) {
@@ -506,19 +507,29 @@
     };
 
     BuilderView.prototype.saveForm = function(e) {
-      var payload;
+      var id, jsonFields, key, lstName, payload, _i, _len;
       if (this.formSaved) {
         return;
       }
       this.formSaved = true;
       this.saveFormButton.attr('disabled', true).text(Formbuilder.options.dict.ALL_CHANGES_SAVED);
       this.collection.sort();
+      jsonFields = this.collection.toJSON();
       payload = JSON.stringify({
-        fields: this.collection.toJSON()
+        fields: jsonFields
       });
       this.$codePreview.val(JSON.stringify({
-        fields: this.collection.toJSON()
+        fields: jsonFields
       }, void 0, 4));
+      lstName = {};
+      for (_i = 0, _len = jsonFields.length; _i < _len; _i++) {
+        key = jsonFields[_i];
+        id = key.name;
+        if (id) {
+          lstName[id] = '';
+        }
+      }
+      this.$inputPreview.val(JSON.stringify(lstName, void 0, 4));
       if (Formbuilder.options.HTTP_ENDPOINT) {
         this.doAjaxSave(payload);
       }
@@ -555,15 +566,15 @@
 
   Formbuilder = (function() {
     Formbuilder.helpers = {
-      defaultFieldAttrs: function(field_type) {
+      defaultFieldAttrs: function(control) {
         var attrs, _base;
         attrs = {};
         attrs[Formbuilder.options.mappings.LABEL] = 'Untitled';
         attrs[Formbuilder.options.mappings.LABEL_COL] = '7';
-        attrs[Formbuilder.options.mappings.FIELD_TYPE] = field_type;
+        attrs[Formbuilder.options.mappings.CONTROL] = control;
         attrs[Formbuilder.options.mappings.REQUIRED] = true;
         attrs['field_options'] = {};
-        return (typeof (_base = Formbuilder.fields[field_type]).defaultAttributes === "function" ? _base.defaultAttributes(attrs) : void 0) || attrs;
+        return (typeof (_base = Formbuilder.fields[control]).defaultAttributes === "function" ? _base.defaultAttributes(attrs) : void 0) || attrs;
       },
       simple_format: function(x) {
         return x != null ? x.replace(/\n/g, '<br />') : void 0;
@@ -577,12 +588,12 @@
       AUTOSAVE: true,
       CLEAR_FIELD_CONFIRM: false,
       mappings: {
-        ID: 'id',
+        NAME: 'name',
         SIZE: 'field_options.size',
         UNITS: 'field_options.units',
         LABEL: 'label',
         LABEL_COL: 'labelCol',
-        FIELD_TYPE: 'field_type',
+        CONTROL: 'control',
         FIELD_COL: 'fieldCol',
         REQUIRED: 'required',
         ADMIN_ONLY: 'admin_only',
@@ -595,7 +606,8 @@
         MAX: 'field_options.max',
         MINLENGTH: 'field_options.minlength',
         MAXLENGTH: 'field_options.maxlength',
-        LENGTH_UNITS: 'field_options.min_max_length_units'
+        LENGTH_UNITS: 'field_options.min_max_length_units',
+        EXTRA_CLASSES: 'extraClasses'
       },
       dict: {
         ALL_CHANGES_SAVED: 'All changes saved',
@@ -617,7 +629,7 @@
         x = _ref5[_i];
         opts[x] = _.template(opts[x]);
       }
-      opts.field_type = name;
+      opts.control = name;
       Formbuilder.fields[name] = opts;
       if (opts.type === 'non_input') {
         return Formbuilder.nonInputFields[name] = opts;
@@ -733,6 +745,21 @@
 }).call(this);
 
 (function() {
+  Formbuilder.registerField('input', {
+    order: 0,
+    view: "<input type='text' class='form-control input<%= rf.get(Formbuilder.options.mappings.SIZE) %>' />",
+    edit: "<%= Formbuilder.templates['edit/size']() %>\n<%= Formbuilder.templates['edit/min_max_length']() %>",
+    addButton: "<span class='symbol'><span class='fa fa-font'></span></span> Input",
+    defaultAttributes: function(attrs) {
+      attrs.field_options.size = '-sm';
+      attrs.fieldCol = '5';
+      return attrs;
+    }
+  });
+
+}).call(this);
+
+(function() {
   Formbuilder.registerField('number', {
     order: 30,
     view: "<input type='text' />\n<% if (units = rf.get(Formbuilder.options.mappings.UNITS)) { %>\n  <%= units %>\n<% } %>",
@@ -757,11 +784,15 @@
 }).call(this);
 
 (function() {
-  Formbuilder.registerField('price', {
+  Formbuilder.registerField('inputFormat', {
     order: 45,
-    view: "<div class='input-line'>\n  <span class='above-line'>$</span>\n  <span class='dolars'>\n    <input type='text' />\n    <label>Dollars</label>\n  </span>\n  <span class='above-line'>.</span>\n  <span class='cents'>\n    <input type='text' />\n    <label>Cents</label>\n  </span>\n</div>",
-    edit: "",
-    addButton: "<span class=\"symbol\"><span class=\"fa fa-usd\"></span></span> Price"
+    view: "<div class=\"input-group input-group-sm\">\n  <input type=\"text\" class=\"form-control\">\n  <div class=\"input-group-addon\"><%= rf.get(Formbuilder.options.mappings.UNITS) %></div>\n</div>",
+    edit: "<%= Formbuilder.templates['edit/units']() %>",
+    addButton: "<span class=\"symbol\"><span class=\"fa fa-eur\"></span></span> Money",
+    defaultAttributes: function(attrs) {
+      attrs.fieldCol = '5';
+      return attrs;
+    }
   });
 
 }).call(this);
@@ -800,21 +831,6 @@
 }).call(this);
 
 (function() {
-  Formbuilder.registerField('text', {
-    order: 0,
-    view: "<input type='text' class='form-control input<%= rf.get(Formbuilder.options.mappings.SIZE) %>' />",
-    edit: "<%= Formbuilder.templates['edit/size']() %>\n<%= Formbuilder.templates['edit/min_max_length']() %>",
-    addButton: "<span class='symbol'><span class='fa fa-font'></span></span> Text",
-    defaultAttributes: function(attrs) {
-      attrs.field_options.size = '-sm';
-      attrs.fieldCol = '5';
-      return attrs;
-    }
-  });
-
-}).call(this);
-
-(function() {
   Formbuilder.registerField('time', {
     order: 25,
     view: "<div class='input-line'>\n  <span class='hours'>\n    <input type=\"text\" />\n    <label>HH</label>\n  </span>\n\n  <span class='above-line'>:</span>\n\n  <span class='minutes'>\n    <input type=\"text\" />\n    <label>MM</label>\n  </span>\n\n  <span class='above-line'>:</span>\n\n  <span class='seconds'>\n    <input type=\"text\" />\n    <label>SS</label>\n  </span>\n\n  <span class='am_pm'>\n    <select>\n      <option>AM</option>\n      <option>PM</option>\n    </select>\n  </span>\n</div>",
@@ -846,7 +862,7 @@ __p +=
 '\n' +
 ((__t = ( Formbuilder.templates['edit/common']() )) == null ? '' : __t) +
 '\n' +
-((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].edit({rf: rf}) )) == null ? '' : __t) +
+((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.CONTROL)].edit({rf: rf}) )) == null ? '' : __t) +
 '\n';
 
 }
@@ -857,12 +873,12 @@ this["Formbuilder"]["templates"]["edit/base_header"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'fb-field-label\'>\n  <code class="field-id" data-rv-text="model.' +
-((__t = ( Formbuilder.options.mappings.ID )) == null ? '' : __t) +
+__p += '<div class=\'fb-field-label\'>\n  <code class="field-name" data-rv-text="model.' +
+((__t = ( Formbuilder.options.mappings.NAME )) == null ? '' : __t) +
 '"></code>\n  <span data-rv-text="model.' +
 ((__t = ( Formbuilder.options.mappings.LABEL )) == null ? '' : __t) +
-'"></span>\n  <code class=\'field-type\' data-rv-text=\'model.' +
-((__t = ( Formbuilder.options.mappings.FIELD_TYPE )) == null ? '' : __t) +
+'"></span>\n  <code class=\'control\' data-rv-text=\'model.' +
+((__t = ( Formbuilder.options.mappings.CONTROL )) == null ? '' : __t) +
 '\'></code>\n  <span class=\'fa fa-arrow-right pull-right\'></span>\n</div>\n';
 
 }
@@ -876,7 +892,7 @@ with (obj) {
 __p +=
 ((__t = ( Formbuilder.templates['edit/base_header']() )) == null ? '' : __t) +
 '\n' +
-((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].edit({rf: rf}) )) == null ? '' : __t) +
+((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.CONTROL)].edit({rf: rf}) )) == null ? '' : __t) +
 '\n';
 
 }
@@ -902,26 +918,28 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
 __p += '<div class=\'fb-common-wrapper\'>\n  ' +
-((__t = ( Formbuilder.templates['edit/id']() )) == null ? '' : __t) +
+((__t = ( Formbuilder.templates['edit/name']() )) == null ? '' : __t) +
 '\n</div>\n<div class=\'fb-edit-section-header\'>Label</div>\n\n<div class=\'fb-common-wrapper\'>\n  <div class=\'fb-label-description\'>\n    ' +
 ((__t = ( Formbuilder.templates['edit/label_description']() )) == null ? '' : __t) +
 '\n  </div>\n  <div class=\'fb-common-checkboxes\'>\n    ' +
 ((__t = ( Formbuilder.templates['edit/checkboxes']() )) == null ? '' : __t) +
 '\n  </div>\n  <label for="selectInputColSize">Input Column Size</label>\n  <select id="selectInputColSize" data-rv-value="model.' +
 ((__t = ( Formbuilder.options.mappings.FIELD_COL )) == null ? '' : __t) +
-'">\n    <option value="1">1</option>\n    <option value="2">2</option>\n    <option value="3">3</option>\n    <option value="4">4</option>\n    <option value="5">5</option>\n    <option value="6">6</option>\n    <option value="7">7</option>\n    <option value="8">8</option>\n    <option value="9">9</option>\n    <option value="10">10</option>\n    <option value="11">11</option>\n    <option value="12">12</option>\n  </select>\n  <div class=\'fb-clear\'></div>\n</div>\n';
+'">\n    <option value="1">1</option>\n    <option value="2">2</option>\n    <option value="3">3</option>\n    <option value="4">4</option>\n    <option value="5">5</option>\n    <option value="6">6</option>\n    <option value="7">7</option>\n    <option value="8">8</option>\n    <option value="9">9</option>\n    <option value="10">10</option>\n    <option value="11">11</option>\n    <option value="12">12</option>\n  </select>\n  <div class=\'fb-clear\'></div>\n</div>\n<div class=\'fb-common-wrapper\'>\n  ' +
+((__t = ( Formbuilder.templates['edit/extraClasses']() )) == null ? '' : __t) +
+'\n</div>\n';
 
 }
 return __p
 };
 
-this["Formbuilder"]["templates"]["edit/id"] = function(obj) {
+this["Formbuilder"]["templates"]["edit/extraClasses"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class="fb-common-id">\n  <label for="inputID">ID</label>\n  <input type="text" id="inputID" data-rv-input="model.' +
-((__t = ( Formbuilder.options.mappings.ID )) == null ? '' : __t) +
-'" />\n</div>\n';
+__p += '<div class=\'fb-edit-section-header\'>CSS classes</div>\n<input type="text" data-rv-input="model.' +
+((__t = ( Formbuilder.options.mappings.EXTRA_CLASSES )) == null ? '' : __t) +
+'" />\n';
 
 }
 return __p
@@ -980,6 +998,18 @@ __p += '<div class=\'fb-edit-section-header\'>Length Limit</div>\n\nMin\n<input 
 '" style="width: 30px" />\n\n&nbsp;&nbsp;\n\n<select data-rv-value="model.' +
 ((__t = ( Formbuilder.options.mappings.LENGTH_UNITS )) == null ? '' : __t) +
 '" style="width: auto;">\n  <option value="characters">characters</option>\n  <option value="words">words</option>\n</select>\n';
+
+}
+return __p
+};
+
+this["Formbuilder"]["templates"]["edit/name"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<div class="fb-common-name">\n  <label for="inputName">Name</label>\n  <input type="text" id="inputName" data-rv-input="model.' +
+((__t = ( Formbuilder.options.mappings.NAME )) == null ? '' : __t) +
+'" />\n</div>\n';
 
 }
 return __p
@@ -1061,20 +1091,24 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
-__p += '<div class=\'fb-tab-pane active\' id=\'addField\'>\n  <div class=\'fb-add-field-types\'>\n    <div class=\'section\'>\n      ';
+__p += '<div class=\'fb-tab-pane active\' id=\'addField\'>\n  <div class=\'fb-add-controls\'>\n    <div class=\'section\'>\n      ';
  _.each(_.sortBy(Formbuilder.inputFields, 'order'), function(f){ ;
-__p += '\n        <a data-field-type="' +
-((__t = ( f.field_type )) == null ? '' : __t) +
+__p += '\n        ';
+if (f.control != 'website') { ;
+__p += '\n        <a data-control="' +
+((__t = ( f.control )) == null ? '' : __t) +
 '" class="' +
 ((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
 '">\n          ' +
 ((__t = ( f.addButton )) == null ? '' : __t) +
-'\n        </a>\n      ';
+'\n        </a>\n        ';
+};
+__p += '\n      ';
  }); ;
 __p += '\n    </div>\n\n    <div class=\'section\'>\n      ';
  _.each(_.sortBy(Formbuilder.nonInputFields, 'order'), function(f){ ;
-__p += '\n        <a data-field-type="' +
-((__t = ( f.field_type )) == null ? '' : __t) +
+__p += '\n        <a data-control="' +
+((__t = ( f.control )) == null ? '' : __t) +
 '" class="' +
 ((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
 '">\n          ' +
@@ -1115,7 +1149,7 @@ this["Formbuilder"]["templates"]["partials/right_side"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'fb-right\'>\n  <ul class=\'fb-tabs\'>\n    <li class=\'active\'><a data-target=\'#preview\'>Preview</a></li>\n    <li><a data-target=\'#code\'>Code</a></li>\n  </ul>\n  <div class=\'fb-tab-content\'>\n    <div class=\'fb-tab-pane active\' id=\'preview\'>\n      <div class=\'fb-no-response-fields\'>No response fields</div>\n      <form class="form-horizontal">\n        <div class=\'fb-response-fields\'></div>\n      </form>\n    </div>\n    <div class=\'fb-tab-pane\' id=\'code\'>\n      <textarea id="textCode" class="fb-code-preview" readonly="readonly" cols=50 rows=25></textarea>\n    </div>\n  </div>\n</div>\n';
+__p += '<div class=\'fb-right\'>\n  <ul class=\'fb-tabs\'>\n    <li class=\'active\'><a data-target=\'#preview\'>Preview</a></li>\n    <li><a data-target=\'#code\'>Code</a></li>\n    <li><a data-target=\'#inputs\'>Inputs</a></li>\n  </ul>\n  <div class=\'fb-tab-content\'>\n    <div class=\'fb-tab-pane active\' id=\'preview\'>\n      <div class=\'fb-no-response-fields\'>No response fields</div>\n      <form class="form-horizontal">\n        <div class=\'fb-response-fields\'></div>\n      </form>\n    </div>\n    <div class=\'fb-tab-pane\' id=\'code\'>\n      <textarea id="textCode" class="fb-code-preview" readonly="readonly" cols=50 rows=25></textarea>\n    </div>\n    <div class=\'fb-tab-pane\' id=\'inputs\'>\n      <textarea id="textInputs" class="fb-inputs-preview" readonly="readonly" cols=50 rows=25></textarea>\n    </div>\n  </div>\n</div>\n';
 
 }
 return __p
@@ -1192,7 +1226,7 @@ with (obj) {
 __p += '<div class="col-sm-' +
 ((__t = ( rf.get(Formbuilder.options.mappings.FIELD_COL) )) == null ? '' : __t) +
 '">\n  ' +
-((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].view({rf: rf}) )) == null ? '' : __t) +
+((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.CONTROL)].view({rf: rf}) )) == null ? '' : __t) +
 '\n  <span class=\'help-block\'>\n    ' +
 ((__t = ( Formbuilder.helpers.simple_format(rf.get(Formbuilder.options.mappings.DESCRIPTION)) )) == null ? '' : __t) +
 '\n  </span>\n</div>\n';
