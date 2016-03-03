@@ -47,18 +47,20 @@
         selector: '.fb-main',
         bootstrapData: [
           {
-            "label": "Do you have a website?",
+            "label": "Montant",
             "labelCol": "7",
-            "control": "website",
+            "control": "inputFormat",
             "fieldCol": "5",
             "required": false,
-            "field_options": {},
+            "field_options": {
+              "units": "€"
+            },
             "cid": "c1"
           },
           {
             "label": "Please enter your clearance number",
             "labelCol": "7",
-            "control": "text",
+            "control": "input",
             "fieldCol": "5",
             "required": true,
             "field_options": {},

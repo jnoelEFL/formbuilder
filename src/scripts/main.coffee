@@ -336,15 +336,17 @@ class BuilderView extends Backbone.View
     @collection.sort()
 
     jsonFields = @collection.toJSON()
-    payload = JSON.stringify fields: jsonFields
-
-    @$codePreview.val(JSON.stringify fields: jsonFields, undefined, 4)
 
     lstName = {}
 
     for key in jsonFields
       id = key.name
+      key.extraClasses = if key.extraClasses then key.extraClasses.split(' ') else []
       if id then lstName[id] = ''
+
+    payload = JSON.stringify fields: jsonFields
+
+    @$codePreview.val(JSON.stringify fields: jsonFields, undefined, 4)
 
     @$inputPreview.val(JSON.stringify lstName, undefined, 4)
 
@@ -374,9 +376,14 @@ class Formbuilder
       attrs = {}
       attrs[Formbuilder.options.mappings.LABEL] = 'Untitled'
       attrs[Formbuilder.options.mappings.LABEL_COL] = '7'
+      attrs[Formbuilder.options.mappings.FIELD_COL] = '5'
       attrs[Formbuilder.options.mappings.CONTROL] = control
       attrs[Formbuilder.options.mappings.REQUIRED] = true
-      attrs['field_options'] = {}
+      attrs[Formbuilder.options.mappings.NAME] = 'name'
+      attrs[Formbuilder.options.mappings.EXTRA_CLASSES] = ''
+      attrs['field_options'] = {
+        size: '-sm'
+      }
       Formbuilder.fields[control].defaultAttributes?(attrs) || attrs
 
     simple_format: (x) ->

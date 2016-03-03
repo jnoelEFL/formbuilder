@@ -14,8 +14,3 @@ Formbuilder.registerField 'input',
   addButton: """
     <span class='symbol'><span class='fa fa-font'></span></span> Input
   """
-
-  defaultAttributes: (attrs) ->
-    attrs.field_options.size = '-sm'
-    attrs.fieldCol = '5'
-    attrs

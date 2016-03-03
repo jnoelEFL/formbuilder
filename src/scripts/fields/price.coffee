@@ -16,7 +16,3 @@ Formbuilder.registerField 'inputFormat',
   addButton: """
     <span class="symbol"><span class="fa fa-eur"></span></span> Money
   """
-
-  defaultAttributes: (attrs) ->
-    attrs.fieldCol = '5'
-    attrs

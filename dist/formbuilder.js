@@ -515,20 +515,21 @@
       this.saveFormButton.attr('disabled', true).text(Formbuilder.options.dict.ALL_CHANGES_SAVED);
       this.collection.sort();
       jsonFields = this.collection.toJSON();
+      lstName = {};
+      for (_i = 0, _len = jsonFields.length; _i < _len; _i++) {
+        key = jsonFields[_i];
+        id = key.name;
+        key.extraClasses = key.extraClasses ? key.extraClasses.split(' ') : [];
+        if (id) {
+          lstName[id] = '';
+        }
+      }
       payload = JSON.stringify({
         fields: jsonFields
       });
       this.$codePreview.val(JSON.stringify({
         fields: jsonFields
       }, void 0, 4));
-      lstName = {};
-      for (_i = 0, _len = jsonFields.length; _i < _len; _i++) {
-        key = jsonFields[_i];
-        id = key.name;
-        if (id) {
-          lstName[id] = '';
-        }
-      }
       this.$inputPreview.val(JSON.stringify(lstName, void 0, 4));
       if (Formbuilder.options.HTTP_ENDPOINT) {
         this.doAjaxSave(payload);
@@ -571,9 +572,14 @@
         attrs = {};
         attrs[Formbuilder.options.mappings.LABEL] = 'Untitled';
         attrs[Formbuilder.options.mappings.LABEL_COL] = '7';
+        attrs[Formbuilder.options.mappings.FIELD_COL] = '5';
         attrs[Formbuilder.options.mappings.CONTROL] = control;
         attrs[Formbuilder.options.mappings.REQUIRED] = true;
-        attrs['field_options'] = {};
+        attrs[Formbuilder.options.mappings.NAME] = 'name';
+        attrs[Formbuilder.options.mappings.EXTRA_CLASSES] = '';
+        attrs['field_options'] = {
+          size: '-sm'
+        };
         return (typeof (_base = Formbuilder.fields[control]).defaultAttributes === "function" ? _base.defaultAttributes(attrs) : void 0) || attrs;
       },
       simple_format: function(x) {
@@ -749,12 +755,7 @@
     order: 0,
     view: "<input type='text' class='form-control input<%= rf.get(Formbuilder.options.mappings.SIZE) %>' />",
     edit: "<%= Formbuilder.templates['edit/size']() %>\n<%= Formbuilder.templates['edit/min_max_length']() %>",
-    addButton: "<span class='symbol'><span class='fa fa-font'></span></span> Input",
-    defaultAttributes: function(attrs) {
-      attrs.field_options.size = '-sm';
-      attrs.fieldCol = '5';
-      return attrs;
-    }
+    addButton: "<span class='symbol'><span class='fa fa-font'></span></span> Input"
   });
 
 }).call(this);
@@ -788,11 +789,7 @@
     order: 45,
     view: "<div class=\"input-group input-group-sm\">\n  <input type=\"text\" class=\"form-control\">\n  <div class=\"input-group-addon\"><%= rf.get(Formbuilder.options.mappings.UNITS) %></div>\n</div>",
     edit: "<%= Formbuilder.templates['edit/units']() %>",
-    addButton: "<span class=\"symbol\"><span class=\"fa fa-eur\"></span></span> Money",
-    defaultAttributes: function(attrs) {
-      attrs.fieldCol = '5';
-      return attrs;
-    }
+    addButton: "<span class=\"symbol\"><span class=\"fa fa-eur\"></span></span> Money"
   });
 
 }).call(this);
