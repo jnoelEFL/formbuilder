@@ -524,13 +524,12 @@
           lstName[id] = '';
         }
       }
-      payload = JSON.stringify({
-        fields: jsonFields
-      });
-      this.$codePreview.val(JSON.stringify({
-        fields: jsonFields
-      }, void 0, 4));
-      this.$inputPreview.val(JSON.stringify(lstName, void 0, 4));
+      payload = {
+        fields: jsonFields,
+        inputs: lstName
+      };
+      this.$codePreview.val(JSON.stringify(payload.fields, void 0, 4));
+      this.$inputPreview.val(JSON.stringify(payload.inputs, void 0, 4));
       if (Formbuilder.options.HTTP_ENDPOINT) {
         this.doAjaxSave(payload);
       }

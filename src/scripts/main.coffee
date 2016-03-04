@@ -344,11 +344,13 @@ class BuilderView extends Backbone.View
       key.extraClasses = if key.extraClasses then key.extraClasses.split(' ') else []
       if id then lstName[id] = ''
 
-    payload = JSON.stringify fields: jsonFields
+    payload =
+      fields: jsonFields
+      inputs: lstName
 
-    @$codePreview.val(JSON.stringify fields: jsonFields, undefined, 4)
+    @$codePreview.val(JSON.stringify payload.fields, undefined, 4)
 
-    @$inputPreview.val(JSON.stringify lstName, undefined, 4)
+    @$inputPreview.val(JSON.stringify payload.inputs, undefined, 4)
 
     if Formbuilder.options.HTTP_ENDPOINT then @doAjaxSave(payload)
     @formBuilder.trigger 'save', payload
