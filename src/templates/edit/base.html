@@ -1,3 +1,7 @@
-<%= Formbuilder.templates['edit/base_header']() %>
-<%= Formbuilder.templates['edit/common']() %>
-<%= Formbuilder.fields[rf.get(Formbuilder.options.mappings.CONTROL)].edit({rf: rf}) %>
+<% if (rf.get(Formbuilder.options.mappings.CONTROL) === 'paragraph') { %>
+  <%= Formbuilder.templates['edit/paragraph']({rf: rf}) %>
+<% } else { %>
+  <%= Formbuilder.templates['edit/base_header']() %>
+  <%= Formbuilder.templates['edit/common']() %>
+  <%= Formbuilder.fields[rf.get(Formbuilder.options.mappings.CONTROL)].edit({rf: rf}) %>
+<% } %>

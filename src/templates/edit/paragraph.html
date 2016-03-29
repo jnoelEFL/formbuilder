@@ -1,0 +1,19 @@
+<div class='fb-field-label'>
+  <code class="field-name" data-rv-text="model.<%= Formbuilder.options.mappings.NAME %>"></code>
+  <code class='control' data-rv-text='model.<%= Formbuilder.options.mappings.CONTROL %>'></code>
+  <span class='fa fa-arrow-right pull-right'></span>
+</div>
+
+<div class='fb-common-wrapper'>
+  <%= Formbuilder.templates['edit/name']() %>
+</div>
+<div class='fb-common-wrapper'>
+  <div class='fb-label-description'>
+    <textarea data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>'
+      placeholder='Text to show'></textarea>
+  </div>
+  <div class='fb-clear'></div>
+</div>
+<div class='fb-common-wrapper'>
+  <%= Formbuilder.templates['edit/extraClasses']() %>
+</div>

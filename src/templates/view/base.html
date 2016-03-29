@@ -1,3 +1,8 @@
+<% if (rf.get(Formbuilder.options.mappings.CONTROL) === 'paragraph') { %>
+  <%= Formbuilder.templates['view/paragraph']({rf: rf}) %>
+
+  <%= Formbuilder.templates['view/duplicate_remove']({rf: rf}) %>
+<% } else { %>
 <div class='form-group'>
   <div class='cover'></div>
   <%= Formbuilder.templates['view/label']({rf: rf}) %>
@@ -6,3 +11,4 @@
 
   <%= Formbuilder.templates['view/duplicate_remove']({rf: rf}) %>
 </div>
+<% } %>

@@ -772,7 +772,7 @@
 (function() {
   Formbuilder.registerField('paragraph', {
     order: 5,
-    view: "<textarea class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>'></textarea>",
+    view: "<p class='rf-size<%= rf.get(Formbuilder.options.mappings.SIZE) %>'><%= rf.get(Formbuilder.options.mappings.LABEL) %></p>",
     edit: "<%= Formbuilder.templates['edit/size']() %>\n<%= Formbuilder.templates['edit/min_max_length']() %>",
     addButton: "<span class=\"symbol\">&#182;</span> Paragraph",
     defaultAttributes: function(attrs) {
@@ -851,15 +851,24 @@ this["Formbuilder"]["templates"] = this["Formbuilder"]["templates"] || {};
 
 this["Formbuilder"]["templates"]["edit/base"] = function(obj) {
 obj || (obj = {});
-var __t, __p = '', __e = _.escape;
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
 with (obj) {
-__p +=
+
+ if (rf.get(Formbuilder.options.mappings.CONTROL) === 'paragraph') { ;
+__p += '\n  ' +
+((__t = ( Formbuilder.templates['edit/paragraph']({rf: rf}) )) == null ? '' : __t) +
+'\n';
+ } else { ;
+__p += '\n  ' +
 ((__t = ( Formbuilder.templates['edit/base_header']() )) == null ? '' : __t) +
-'\n' +
+'\n  ' +
 ((__t = ( Formbuilder.templates['edit/common']() )) == null ? '' : __t) +
-'\n' +
+'\n  ' +
 ((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.CONTROL)].edit({rf: rf}) )) == null ? '' : __t) +
 '\n';
+ } ;
+__p += '\n';
 
 }
 return __p
@@ -1042,6 +1051,26 @@ __p += '\n\n<div class=\'fb-bottom-add\'>\n  <a class="js-add-option ' +
 return __p
 };
 
+this["Formbuilder"]["templates"]["edit/paragraph"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<div class=\'fb-field-label\'>\n  <code class="field-name" data-rv-text="model.' +
+((__t = ( Formbuilder.options.mappings.NAME )) == null ? '' : __t) +
+'"></code>\n  <code class=\'control\' data-rv-text=\'model.' +
+((__t = ( Formbuilder.options.mappings.CONTROL )) == null ? '' : __t) +
+'\'></code>\n  <span class=\'fa fa-arrow-right pull-right\'></span>\n</div>\n\n<div class=\'fb-common-wrapper\'>\n  ' +
+((__t = ( Formbuilder.templates['edit/name']() )) == null ? '' : __t) +
+'\n</div>\n<div class=\'fb-common-wrapper\'>\n  <div class=\'fb-label-description\'>\n    <textarea data-rv-input=\'model.' +
+((__t = ( Formbuilder.options.mappings.LABEL )) == null ? '' : __t) +
+'\'\n      placeholder=\'Text to show\'></textarea>\n  </div>\n  <div class=\'fb-clear\'></div>\n</div>\n<div class=\'fb-common-wrapper\'>\n  ' +
+((__t = ( Formbuilder.templates['edit/extraClasses']() )) == null ? '' : __t) +
+'\n</div>\n';
+
+}
+return __p
+};
+
 this["Formbuilder"]["templates"]["edit/size"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
@@ -1165,15 +1194,26 @@ return __p
 
 this["Formbuilder"]["templates"]["view/base"] = function(obj) {
 obj || (obj = {});
-var __t, __p = '', __e = _.escape;
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
 with (obj) {
-__p += '<div class=\'form-group\'>\n  <div class=\'cover\'></div>\n  ' +
+
+ if (rf.get(Formbuilder.options.mappings.CONTROL) === 'paragraph') { ;
+__p += '\n  ' +
+((__t = ( Formbuilder.templates['view/paragraph']({rf: rf}) )) == null ? '' : __t) +
+'\n\n  ' +
+((__t = ( Formbuilder.templates['view/duplicate_remove']({rf: rf}) )) == null ? '' : __t) +
+'\n';
+ } else { ;
+__p += '\n<div class=\'form-group\'>\n  <div class=\'cover\'></div>\n  ' +
 ((__t = ( Formbuilder.templates['view/label']({rf: rf}) )) == null ? '' : __t) +
 '\n\n  ' +
 ((__t = ( Formbuilder.templates['view/input']({rf: rf}) )) == null ? '' : __t) +
 '\n\n  ' +
 ((__t = ( Formbuilder.templates['view/duplicate_remove']({rf: rf}) )) == null ? '' : __t) +
 '\n</div>\n';
+ } ;
+__p += '\n';
 
 }
 return __p
@@ -1245,6 +1285,18 @@ __p += 'required ';
 __p += '">\n  ' +
 ((__t = ( Formbuilder.helpers.simple_format(rf.get(Formbuilder.options.mappings.LABEL)) )) == null ? '' : __t) +
 '\n</label>\n';
+
+}
+return __p
+};
+
+this["Formbuilder"]["templates"]["view/paragraph"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p +=
+((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.CONTROL)].view({rf: rf}) )) == null ? '' : __t) +
+'\n';
 
 }
 return __p
