@@ -702,9 +702,9 @@
 }).call(this);
 
 (function() {
-  Formbuilder.registerField('date', {
+  Formbuilder.registerField('datepicker', {
     order: 20,
-    view: "<div class='input-line'>\n  <span class='month'>\n    <input type=\"text\" />\n    <label>MM</label>\n  </span>\n\n  <span class='above-line'>/</span>\n\n  <span class='day'>\n    <input type=\"text\" />\n    <label>DD</label>\n  </span>\n\n  <span class='above-line'>/</span>\n\n  <span class='year'>\n    <input type=\"text\" />\n    <label>YYYY</label>\n  </span>\n</div>",
+    view: "<div class=\"input-group input-group-sm\">\n  <input type=\"text\" class=\"form-control\" placeholder=\"DD/MM/YYYY\">\n  <div class=\"input-group-addon\"><i class=\"glyphicon glyphicon-calendar\"></i></div>\n</div>",
     edit: "",
     addButton: "<span class=\"symbol\"><span class=\"fa fa-calendar\"></span></span> Date"
   });

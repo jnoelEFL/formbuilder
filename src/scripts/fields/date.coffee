@@ -1,27 +1,11 @@
-Formbuilder.registerField 'date',
+Formbuilder.registerField 'datepicker',
 
   order: 20
 
   view: """
-    <div class='input-line'>
-      <span class='month'>
-        <input type="text" />
-        <label>MM</label>
-      </span>
-
-      <span class='above-line'>/</span>
-
-      <span class='day'>
-        <input type="text" />
-        <label>DD</label>
-      </span>
-
-      <span class='above-line'>/</span>
-
-      <span class='year'>
-        <input type="text" />
-        <label>YYYY</label>
-      </span>
+    <div class="input-group input-group-sm">
+      <input type="text" class="form-control" placeholder="DD/MM/YYYY">
+      <div class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></div>
     </div>
   """
 
