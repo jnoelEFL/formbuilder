@@ -1,4 +1,4 @@
-Formbuilder.registerField 'dropdown',
+Formbuilder.registerField 'select',
 
   order: 24
 
@@ -9,7 +9,8 @@ Formbuilder.registerField 'dropdown',
       <% } %>
 
       <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>
-        <option <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'selected' %>>
+        <option <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'selected' %>
+        value="<%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].value %>">
           <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>
         </option>
       <% } %>
