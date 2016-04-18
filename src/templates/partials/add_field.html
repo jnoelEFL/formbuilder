@@ -2,7 +2,7 @@
   <div class='fb-add-controls'>
     <div class='section'>
       <% _.each(_.sortBy(Formbuilder.inputFields, 'order'), function(f){ %>
-        <%if (f.control != 'website') { %>
+        <%if (f.control != 'website' && f.control != 'time' && f.control != 'address') { %>
         <a data-control="<%= f.control %>" class="<%= Formbuilder.options.BUTTON_CLASS %>">
           <%= f.addButton %>
         </a>
