@@ -70,3 +70,5 @@
 .response-field-website input{width:200px}
 .fb-code-preview{resize:none}
 label.required:after{color:#e32;content:' *';display:inline}
+.option-label-input{width:100px}
+.option-value-input{width:100px}

@@ -182,7 +182,8 @@
       'click .js-add-option': 'addOption',
       'click .js-remove-option': 'removeOption',
       'click .js-default-updated': 'defaultUpdated',
-      'input .option-label-input': 'forceRender'
+      'input .option-label-input': 'forceRender',
+      'input .option-value-input': 'forceRender'
     };
 
     EditFieldView.prototype.initialize = function(options) {
@@ -213,6 +214,7 @@
       options = this.model.get(Formbuilder.options.mappings.OPTIONS) || [];
       newOption = {
         label: "",
+        value: "",
         checked: false
       };
       if (i > -1) {
@@ -602,7 +604,7 @@
         FIELD_COL: 'fieldCol',
         REQUIRED: 'required',
         ADMIN_ONLY: 'admin_only',
-        OPTIONS: 'field_options.options',
+        OPTIONS: 'options',
         DESCRIPTION: 'field_options.description',
         INCLUDE_OTHER: 'field_options.include_other_option',
         INCLUDE_BLANK: 'field_options.include_blank_option',
@@ -680,23 +682,11 @@
 }).call(this);
 
 (function() {
-  Formbuilder.registerField('checkboxes', {
+  Formbuilder.registerField('checkbox', {
     order: 10,
-    view: "<% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n  <div>\n    <label class='fb-option'>\n      <input type='checkbox' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n  <div class='other-option'>\n    <label class='fb-option'>\n      <input type='checkbox' />\n      Other\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
-    edit: "<%= Formbuilder.templates['edit/options']({ includeOther: true }) %>",
-    addButton: "<span class=\"symbol\"><span class=\"fa fa-square-o\"></span></span> Checkboxes",
-    defaultAttributes: function(attrs) {
-      attrs.field_options.options = [
-        {
-          label: "",
-          checked: false
-        }, {
-          label: "",
-          checked: false
-        }
-      ];
-      return attrs;
-    }
+    view: "<div class='checkbox'>\n  <label class='fb-option'>\n    <input type='checkbox'/>\n  </label>\n</div>\n",
+    edit: "",
+    addButton: "<span class=\"symbol\"><span class=\"fa fa-square-o\"></span></span> Checkboxes"
   });
 
 }).call(this);
@@ -712,9 +702,9 @@
 }).call(this);
 
 (function() {
-  Formbuilder.registerField('dropdown', {
+  Formbuilder.registerField('select', {
     order: 24,
-    view: "<select>\n  <% if (rf.get(Formbuilder.options.mappings.INCLUDE_BLANK)) { %>\n    <option value=''></option>\n  <% } %>\n\n  <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n    <option <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'selected' %>>\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </option>\n  <% } %>\n</select>",
+    view: "<select>\n  <% if (rf.get(Formbuilder.options.mappings.INCLUDE_BLANK)) { %>\n    <option value=''></option>\n  <% } %>\n\n  <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n    <option <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'selected' %>\n    value=\"<%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].value %>\">\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </option>\n  <% } %>\n</select>",
     edit: "<%= Formbuilder.templates['edit/options']({ includeBlank: true }) %>",
     addButton: "<span class=\"symbol\"><span class=\"fa fa-caret-down\"></span></span> Dropdown",
     defaultAttributes: function(attrs) {
@@ -796,17 +786,19 @@
 (function() {
   Formbuilder.registerField('radio', {
     order: 15,
-    view: "<% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n  <div>\n    <label class='fb-option'>\n      <input type='radio' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n  <div class='other-option'>\n    <label class='fb-option'>\n      <input type='radio' />\n      Other\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
+    view: "<% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n  <div class=\"radio\">\n    <label class='fb-option'>\n      <input type='radio' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %>\n      value=\"<%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].value %>\"/>\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n  <div class='radio other-option'>\n    <label class='fb-option'>\n      <input type='radio' />\n      Other\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
     edit: "<%= Formbuilder.templates['edit/options']({ includeOther: true }) %>",
     addButton: "<span class=\"symbol\"><span class=\"fa fa-circle-o\"></span></span> Multiple Choice",
     defaultAttributes: function(attrs) {
-      attrs.field_options.options = [
+      attrs.options = [
         {
           label: "",
-          checked: false
+          checked: false,
+          value: ""
         }, {
           label: "",
-          checked: false
+          checked: false,
+          value: ""
         }
       ];
       return attrs;
@@ -861,8 +853,6 @@ __p += '\n  ' +
 '\n';
  } else { ;
 __p += '\n  ' +
-((__t = ( Formbuilder.templates['edit/base_header']() )) == null ? '' : __t) +
-'\n  ' +
 ((__t = ( Formbuilder.templates['edit/common']() )) == null ? '' : __t) +
 '\n  ' +
 ((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.CONTROL)].edit({rf: rf}) )) == null ? '' : __t) +
@@ -1031,9 +1021,9 @@ __p += '\n  <label>\n    <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.INCLUDE_BLANK )) == null ? '' : __t) +
 '\' />\n    Include blank\n  </label>\n';
  } ;
-__p += '\n\n<div class=\'option\' data-rv-each-option=\'model.' +
+__p += '\n<div>\n  <span style="padding-left: 20px"/>\n  <span style="display: inline-block;width: 100px"><strong>Label</strong></span>\n  <span style="display: inline-block;width: 100px"><strong>Value</strong></span>\n</div>\n<div class=\'option\' data-rv-each-option=\'model.' +
 ((__t = ( Formbuilder.options.mappings.OPTIONS )) == null ? '' : __t) +
-'\'>\n  <input type="checkbox" class=\'js-default-updated\' data-rv-checked="option:checked" />\n  <input type="text" data-rv-input="option:label" class=\'option-label-input\' />\n  <a class="js-add-option ' +
+'\'>\n  <input type="checkbox" class=\'js-default-updated\' data-rv-checked="option:checked" />\n  <input type="text" data-rv-input="option:label" class=\'option-label-input\' />\n  <input type="text" data-rv-input="option:value" class=\'option-value-input\' />\n  <a class="js-add-option ' +
 ((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
 '" title="Add Option"><i class=\'fa fa-plus-circle\'></i></a>\n  <a class="js-remove-option ' +
 ((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
@@ -1119,7 +1109,7 @@ with (obj) {
 __p += '<div class=\'fb-tab-pane active\' id=\'addField\'>\n  <div class=\'fb-add-controls\'>\n    <div class=\'section\'>\n      ';
  _.each(_.sortBy(Formbuilder.inputFields, 'order'), function(f){ ;
 __p += '\n        ';
-if (f.control != 'website') { ;
+if (f.control != 'website' && f.control != 'time' && f.control != 'address') { ;
 __p += '\n        <a data-control="' +
 ((__t = ( f.control )) == null ? '' : __t) +
 '" class="' +
