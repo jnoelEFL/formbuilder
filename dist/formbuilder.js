@@ -700,7 +700,7 @@
     order: 10,
     view: "<div class='checkbox'>\n  <label class='fb-option'>\n    <input type='checkbox'/>\n  </label>\n</div>\n",
     edit: "  ",
-    addButton: "<span class=\"symbol\"><span class=\"fa fa-square-o\"></span></span> Checkboxes"
+    addButton: "<span class=\"symbol\"><i class=\"fa fa-square-o\" aria-hidden=\"true\"></i></span> Checkboxes"
   });
 
 }).call(this);
@@ -710,7 +710,7 @@
     order: 20,
     view: "<div class=\"input-group input-group-sm\">\n  <input type=\"text\" class=\"form-control\" placeholder=\"DD/MM/YYYY\">\n  <div class=\"input-group-addon\"><i class=\"glyphicon glyphicon-calendar\"></i></div>\n</div>",
     edit: "",
-    addButton: "<span class=\"symbol\"><span class=\"fa fa-calendar\"></span></span> Date"
+    addButton: "<span class=\"symbol\"><i class=\"fa fa-calendar\" aria-hidden=\"true\"></i></span> Date"
   });
 
 }).call(this);
@@ -720,7 +720,7 @@
     order: 24,
     view: "<select>\n  <% if (rf.get(Formbuilder.options.mappings.INCLUDE_BLANK)) { %>\n    <option value=''></option>\n  <% } %>\n\n  <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n    <option <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'selected' %>\n    value=\"<%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].value %>\">\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </option>\n  <% } %>\n</select>",
     edit: "<%= Formbuilder.templates['edit/options']({ includeBlank: true }) %>",
-    addButton: "<span class=\"symbol\"><span class=\"fa fa-caret-down\"></span></span> Dropdown",
+    addButton: "<span class=\"symbol\"><i class=\"fa fa-caret-down\" aria-hidden=\"true\"></i></span> Dropdown",
     defaultAttributes: function(attrs) {
       attrs.field_options.options = [
         {
@@ -743,7 +743,7 @@
     order: 40,
     view: "<input type='text' class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>' />",
     edit: "",
-    addButton: "<span class=\"symbol\"><span class=\"fa fa-envelope-o\"></span></span> Email"
+    addButton: "<span class=\"symbol\"><i class=\"fa fa-envelope-o\" aria-hidden=\"true\"></i></span> Email"
   });
 
 }).call(this);
@@ -758,7 +758,7 @@
     order: 0,
     view: "<input type='text' class='form-control input<%= rf.get(Formbuilder.options.mappings.SIZE) %>' />",
     edit: "<%= Formbuilder.templates['edit/size']() %>\n<%= Formbuilder.templates['edit/min_max_length']() %>",
-    addButton: "<span class='symbol'><span class='fa fa-font'></span></span> Input"
+    addButton: "<span class='symbol'><i class='fa fa-font' aria-hidden=\"true\"></i></span> Input"
   });
 
 }).call(this);
@@ -768,7 +768,7 @@
     order: 30,
     view: "<input type='text' />\n<% if (units = rf.get(Formbuilder.options.mappings.UNITS)) { %>\n  <%= units %>\n<% } %>",
     edit: "<%= Formbuilder.templates['edit/min_max']() %>\n<%= Formbuilder.templates['edit/units']() %>\n<%= Formbuilder.templates['edit/integer_only']() %>",
-    addButton: "<span class=\"symbol\"><span class=\"fa fa-number\">123</span></span> Number"
+    addButton: "<span class=\"symbol\"><i class=\"fa fa-number\" aria-hidden=\"true\">123</i></span> Number"
   });
 
 }).call(this);
@@ -778,7 +778,7 @@
     order: 5,
     view: "<p class='rf-size<%= rf.get(Formbuilder.options.mappings.SIZE) %>'><%= rf.get(Formbuilder.options.mappings.LABEL) %></p>",
     edit: "<%= Formbuilder.templates['edit/size']() %>\n<%= Formbuilder.templates['edit/min_max_length']() %>",
-    addButton: "<span class=\"symbol\">&#182;</span> Paragraph",
+    addButton: "<span class=\"symbol\"><i class=\"fa fa-paragraph\" aria-hidden=\"true\"></i></span> Paragraph",
     defaultAttributes: function(attrs) {
       attrs.field_options.size = 'small';
       return attrs;
@@ -792,7 +792,7 @@
     order: 45,
     view: "<div class=\"input-group input-group-sm\">\n  <input type=\"text\" class=\"form-control\">\n  <div class=\"input-group-addon\"><%= rf.get(Formbuilder.options.mappings.UNITS) %></div>\n</div>",
     edit: "<%= Formbuilder.templates['edit/units']() %>",
-    addButton: "<span class=\"symbol\"><span class=\"fa fa-eur\"></span></span> Money"
+    addButton: "<span class=\"symbol\"><i class=\"fa fa-eur\" aria-hidden=\"true\"></i></span> Money"
   });
 
 }).call(this);
@@ -802,7 +802,7 @@
     order: 15,
     view: "<% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n  <div class=\"radio\">\n    <label class='fb-option'>\n      <input type='radio' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %>\n      value=\"<%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].value %>\"/>\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n  <div class='radio other-option'>\n    <label class='fb-option'>\n      <input type='radio' />\n      Other\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
     edit: "<%= Formbuilder.templates['edit/options']({ includeOther: true }) %>",
-    addButton: "<span class=\"symbol\"><span class=\"fa fa-circle-o\"></span></span> Multiple Choice",
+    addButton: "<span class=\"symbol\"><i class=\"fa fa-circle-o\" aria-hidden=\"true\"></i></span> Multiple Choice",
     defaultAttributes: function(attrs) {
       attrs.options = [
         {
@@ -827,7 +827,7 @@
     type: 'result',
     view: "<p class='rf-size<%= rf.get(Formbuilder.options.mappings.SIZE) %>'><%= rf.get(Formbuilder.options.mappings.LABEL) %></p>",
     edit: "<%= Formbuilder.templates['edit/size']() %>\n<%= Formbuilder.templates['edit/min_max_length']() %>",
-    addButton: "<i class=\"fa fa-calculator symbol\" aria-hidden=\"true\"></i> Result Value",
+    addButton: "<span class=\"symbol\"><i class=\"fa fa-calculator\" aria-hidden=\"true\"></i></span> Result Value",
     defaultAttributes: function(attrs) {
       attrs.field_options.size = 'small';
       return attrs;
@@ -842,7 +842,7 @@
     type: 'non_input',
     view: "<label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>\n<p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>",
     edit: "<div class='fb-edit-section-header'>Label</div>\n<input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />\n<textarea data-rv-input='model.<%= Formbuilder.options.mappings.DESCRIPTION %>'\n  placeholder='Add a longer description to this field'></textarea>",
-    addButton: "<span class='symbol'><span class='fa fa-minus'></span></span> Section Break"
+    addButton: "<span class='symbol'><i class='fa fa-minus' aria-hidden=\"true\"></i></span> Section Break"
   });
 
 }).call(this);

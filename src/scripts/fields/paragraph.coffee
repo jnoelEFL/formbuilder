@@ -12,7 +12,7 @@ Formbuilder.registerField 'paragraph',
   """
 
   addButton: """
-    <span class="symbol">&#182;</span> Paragraph
+    <span class="symbol"><i class="fa fa-paragraph" aria-hidden="true"></i></span> Paragraph
   """
 
   defaultAttributes: (attrs) ->

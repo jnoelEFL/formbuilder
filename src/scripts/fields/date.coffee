@@ -12,5 +12,5 @@ Formbuilder.registerField 'datepicker',
   edit: ""
 
   addButton: """
-    <span class="symbol"><span class="fa fa-calendar"></span></span> Date
+    <span class="symbol"><i class="fa fa-calendar" aria-hidden="true"></i></span> Date
   """

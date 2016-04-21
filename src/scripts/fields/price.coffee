@@ -14,5 +14,5 @@ Formbuilder.registerField 'inputFormat',
   """
 
   addButton: """
-    <span class="symbol"><span class="fa fa-eur"></span></span> Money
+    <span class="symbol"><i class="fa fa-eur" aria-hidden="true"></i></span> Money
   """

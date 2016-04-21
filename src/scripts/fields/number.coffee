@@ -16,5 +16,5 @@ Formbuilder.registerField 'number',
   """
 
   addButton: """
-    <span class="symbol"><span class="fa fa-number">123</span></span> Number
+    <span class="symbol"><i class="fa fa-number" aria-hidden="true">123</i></span> Number
   """

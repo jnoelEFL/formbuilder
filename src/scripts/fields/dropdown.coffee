@@ -22,7 +22,7 @@ Formbuilder.registerField 'select',
   """
 
   addButton: """
-    <span class="symbol"><span class="fa fa-caret-down"></span></span> Dropdown
+    <span class="symbol"><i class="fa fa-caret-down" aria-hidden="true"></i></span> Dropdown
   """
 
   defaultAttributes: (attrs) ->

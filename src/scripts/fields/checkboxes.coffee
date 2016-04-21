@@ -15,5 +15,5 @@ Formbuilder.registerField 'checkbox',
   """
 
   addButton: """
-    <span class="symbol"><span class="fa fa-square-o"></span></span> Checkboxes
+    <span class="symbol"><i class="fa fa-square-o" aria-hidden="true"></i></span> Checkboxes
   """

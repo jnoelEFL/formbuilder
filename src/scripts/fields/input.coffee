@@ -12,5 +12,5 @@ Formbuilder.registerField 'input',
   """
 
   addButton: """
-    <span class='symbol'><span class='fa fa-font'></span></span> Input
+    <span class='symbol'><i class='fa fa-font' aria-hidden="true"></i></span> Input
   """

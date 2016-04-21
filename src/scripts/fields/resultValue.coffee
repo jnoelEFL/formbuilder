@@ -14,7 +14,7 @@ Formbuilder.registerField 'resultValue',
   """
 
   addButton: """
-    <i class="fa fa-calculator symbol" aria-hidden="true"></i> Result Value
+    <span class="symbol"><i class="fa fa-calculator" aria-hidden="true"></i></span> Result Value
   """
 
   defaultAttributes: (attrs) ->
