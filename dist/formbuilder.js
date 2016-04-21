@@ -1074,11 +1074,7 @@ this["Formbuilder"]["templates"]["edit/paragraph"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'fb-field-label\'>\n  <code class="field-name" data-rv-text="model.' +
-((__t = ( Formbuilder.options.mappings.NAME )) == null ? '' : __t) +
-'"></code>\n  <code class=\'control\' data-rv-text=\'model.' +
-((__t = ( Formbuilder.options.mappings.CONTROL )) == null ? '' : __t) +
-'\'></code>\n  <span class=\'fa fa-arrow-right pull-right\'></span>\n</div>\n\n<div class=\'fb-common-wrapper\'>\n  ' +
+__p += '<div class=\'fb-common-wrapper\'>\n  ' +
 ((__t = ( Formbuilder.templates['edit/name']() )) == null ? '' : __t) +
 '\n</div>\n<div class=\'fb-common-wrapper\'>\n  <div class=\'fb-label-description\'>\n    <textarea data-rv-input=\'model.' +
 ((__t = ( Formbuilder.options.mappings.LABEL )) == null ? '' : __t) +
