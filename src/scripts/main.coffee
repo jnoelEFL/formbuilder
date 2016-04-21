@@ -5,6 +5,8 @@ class FormbuilderModel extends Backbone.DeepModel
     $(".fb-field-wrapper").index $wrapper
   is_input: ->
     Formbuilder.inputFields[@get(Formbuilder.options.mappings.CONTROL)]?
+  is_result: ->
+    Formbuilder.resultFields[@get(Formbuilder.options.mappings.CONTROL)]?
 
 
 class FormbuilderCollection extends Backbone.Collection
@@ -34,9 +36,16 @@ class ViewFieldView extends Backbone.View
     @listenTo @model, "destroy", @remove
 
   render: ->
+    if @model.is_input()
+      @typeField = ''
+    else if @model.is_result()
+      @typeField = '_result'
+    else
+      @typeField = '_non_input'
+
     @$el.addClass('response-field-' + @model.get(Formbuilder.options.mappings.CONTROL))
         .data('cid', @model.cid)
-        .html(Formbuilder.templates["view/base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model}))
+        .html(Formbuilder.templates["view/base#{@typeField}"]({rf: @model}))
 
     return @
 
@@ -83,7 +92,14 @@ class EditFieldView extends Backbone.View
     @listenTo @model, "destroy", @remove
 
   render: ->
-    @$el.html(Formbuilder.templates["edit/base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model}))
+    if @model.is_input()
+      @typeField = ''
+    else if @model.is_result()
+      @typeField = '_result'
+    else
+      @typeField = '_non_input'
+
+    @$el.html(Formbuilder.templates["edit/base#{@typeField}"]({rf: @model}))
     rivets.bind @$el, { model: @model }
     return @
 

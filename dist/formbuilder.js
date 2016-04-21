@@ -68,6 +68,10 @@
       return Formbuilder.inputFields[this.get(Formbuilder.options.mappings.CONTROL)] != null;
     };
 
+    FormbuilderModel.prototype.is_result = function() {
+      return Formbuilder.resultFields[this.get(Formbuilder.options.mappings.CONTROL)] != null;
+    };
+
     return FormbuilderModel;
 
   })(Backbone.DeepModel);
@@ -119,7 +123,14 @@
     };
 
     ViewFieldView.prototype.render = function() {
-      this.$el.addClass('response-field-' + this.model.get(Formbuilder.options.mappings.CONTROL)).data('cid', this.model.cid).html(Formbuilder.templates["view/base" + (!this.model.is_input() ? '_non_input' : '')]({
+      if (this.model.is_input()) {
+        this.typeField = '';
+      } else if (this.model.is_result()) {
+        this.typeField = '_result';
+      } else {
+        this.typeField = '_non_input';
+      }
+      this.$el.addClass('response-field-' + this.model.get(Formbuilder.options.mappings.CONTROL)).data('cid', this.model.cid).html(Formbuilder.templates["view/base" + this.typeField]({
         rf: this.model
       }));
       return this;
@@ -190,7 +201,14 @@
     };
 
     EditFieldView.prototype.render = function() {
-      this.$el.html(Formbuilder.templates["edit/base" + (!this.model.is_input() ? '_non_input' : '')]({
+      if (this.model.is_input()) {
+        this.typeField = '';
+      } else if (this.model.is_result()) {
+        this.typeField = '_result';
+      } else {
+        this.typeField = '_non_input';
+      }
+      this.$el.html(Formbuilder.templates["edit/base" + this.typeField]({
         rf: this.model
       }));
       rivets.bind(this.$el, {
@@ -825,13 +843,9 @@
   Formbuilder.registerField('resultValue', {
     order: 16,
     type: 'result',
-    view: "<p class='rf-size<%= rf.get(Formbuilder.options.mappings.SIZE) %>'><%= rf.get(Formbuilder.options.mappings.LABEL) %></p>",
-    edit: "<%= Formbuilder.templates['edit/size']() %>\n<%= Formbuilder.templates['edit/min_max_length']() %>",
-    addButton: "<span class=\"symbol\"><i class=\"fa fa-calculator\" aria-hidden=\"true\"></i></span> Result Value",
-    defaultAttributes: function(attrs) {
-      attrs.field_options.size = 'small';
-      return attrs;
-    }
+    view: "<span class=''><strong>&#9839;{<%= rf.get(Formbuilder.options.mappings.NAME) %>}</strong></span>",
+    edit: "<%= Formbuilder.templates['edit/size']() %>",
+    addButton: "<span class=\"symbol\"><i class=\"fa fa-calculator\" aria-hidden=\"true\"></i></span> Result Value"
   });
 
 }).call(this);
@@ -895,6 +909,20 @@ __p +=
 '\n' +
 ((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.CONTROL)].edit({rf: rf}) )) == null ? '' : __t) +
 '\n';
+
+}
+return __p
+};
+
+this["Formbuilder"]["templates"]["edit/base_result"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<div class=\'fb-common-wrapper\'>\n  ' +
+((__t = ( Formbuilder.templates['edit/name']() )) == null ? '' : __t) +
+'\n</div>\n<div class=\'fb-common-wrapper\'>\n  ' +
+((__t = ( Formbuilder.templates['edit/extraClasses']() )) == null ? '' : __t) +
+'\n</div>\n';
 
 }
 return __p
@@ -1086,6 +1114,20 @@ __p += '<div class=\'fb-common-wrapper\'>\n  ' +
 return __p
 };
 
+this["Formbuilder"]["templates"]["edit/resultValue"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<div class=\'fb-common-wrapper\'>\n  ' +
+((__t = ( Formbuilder.templates['edit/name']() )) == null ? '' : __t) +
+'\n</div>\n<div class=\'fb-common-wrapper\'>\n  ' +
+((__t = ( Formbuilder.templates['edit/extraClasses']() )) == null ? '' : __t) +
+'\n</div>\n';
+
+}
+return __p
+};
+
 this["Formbuilder"]["templates"]["edit/size"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
@@ -1226,6 +1268,18 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
 __p += '';
+
+}
+return __p
+};
+
+this["Formbuilder"]["templates"]["view/base_result"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p +=
+((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.CONTROL)].view({rf: rf}) )) == null ? '' : __t) +
+'\n';
 
 }
 return __p
