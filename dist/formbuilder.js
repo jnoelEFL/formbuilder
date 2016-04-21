@@ -41,26 +41,26 @@
 }).call(this);
 
 (function() {
-  var BuilderView, EditFieldView, Formbuilder, FormbuilderCollection, FormbuilderModel, ViewFieldView, _ref, _ref1, _ref2, _ref3, _ref4,
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+  var BuilderView, EditFieldView, Formbuilder, FormbuilderCollection, FormbuilderModel, ViewFieldView,
+    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    hasProp = {}.hasOwnProperty;
 
-  FormbuilderModel = (function(_super) {
-    __extends(FormbuilderModel, _super);
+  FormbuilderModel = (function(superClass) {
+    extend(FormbuilderModel, superClass);
 
     function FormbuilderModel() {
-      _ref = FormbuilderModel.__super__.constructor.apply(this, arguments);
-      return _ref;
+      return FormbuilderModel.__super__.constructor.apply(this, arguments);
     }
 
     FormbuilderModel.prototype.sync = function() {};
 
     FormbuilderModel.prototype.indexInDOM = function() {
-      var $wrapper,
-        _this = this;
-      $wrapper = $(".fb-field-wrapper").filter((function(_, el) {
-        return $(el).data('cid') === _this.cid;
-      }));
+      var $wrapper;
+      $wrapper = $(".fb-field-wrapper").filter(((function(_this) {
+        return function(_, el) {
+          return $(el).data('cid') === _this.cid;
+        };
+      })(this)));
       return $(".fb-field-wrapper").index($wrapper);
     };
 
@@ -72,12 +72,11 @@
 
   })(Backbone.DeepModel);
 
-  FormbuilderCollection = (function(_super) {
-    __extends(FormbuilderCollection, _super);
+  FormbuilderCollection = (function(superClass) {
+    extend(FormbuilderCollection, superClass);
 
     function FormbuilderCollection() {
-      _ref1 = FormbuilderCollection.__super__.constructor.apply(this, arguments);
-      return _ref1;
+      return FormbuilderCollection.__super__.constructor.apply(this, arguments);
     }
 
     FormbuilderCollection.prototype.initialize = function() {
@@ -98,12 +97,11 @@
 
   })(Backbone.Collection);
 
-  ViewFieldView = (function(_super) {
-    __extends(ViewFieldView, _super);
+  ViewFieldView = (function(superClass) {
+    extend(ViewFieldView, superClass);
 
     function ViewFieldView() {
-      _ref2 = ViewFieldView.__super__.constructor.apply(this, arguments);
-      return _ref2;
+      return ViewFieldView.__super__.constructor.apply(this, arguments);
     }
 
     ViewFieldView.prototype.className = "fb-field-wrapper";
@@ -132,14 +130,15 @@
     };
 
     ViewFieldView.prototype.clear = function(e) {
-      var cb, x,
-        _this = this;
+      var cb, x;
       e.preventDefault();
       e.stopPropagation();
-      cb = function() {
-        _this.parentView.handleFormUpdate();
-        return _this.model.destroy();
-      };
+      cb = (function(_this) {
+        return function() {
+          _this.parentView.handleFormUpdate();
+          return _this.model.destroy();
+        };
+      })(this);
       x = Formbuilder.options.CLEAR_FIELD_CONFIRM;
       switch (typeof x) {
         case 'string':
@@ -168,12 +167,11 @@
 
   })(Backbone.View);
 
-  EditFieldView = (function(_super) {
-    __extends(EditFieldView, _super);
+  EditFieldView = (function(superClass) {
+    extend(EditFieldView, superClass);
 
     function EditFieldView() {
-      _ref3 = EditFieldView.__super__.constructor.apply(this, arguments);
-      return _ref3;
+      return EditFieldView.__super__.constructor.apply(this, arguments);
     }
 
     EditFieldView.prototype.className = "edit-response-field";
@@ -255,12 +253,11 @@
 
   })(Backbone.View);
 
-  BuilderView = (function(_super) {
-    __extends(BuilderView, _super);
+  BuilderView = (function(superClass) {
+    extend(BuilderView, superClass);
 
     function BuilderView() {
-      _ref4 = BuilderView.__super__.constructor.apply(this, arguments);
-      return _ref4;
+      return BuilderView.__super__.constructor.apply(this, arguments);
     }
 
     BuilderView.prototype.SUBVIEWS = [];
@@ -274,11 +271,12 @@
     };
 
     BuilderView.prototype.initialize = function(options) {
-      var selector;
-      selector = options.selector, this.formBuilder = options.formBuilder, this.bootstrapData = options.bootstrapData;
+      var ref, selector;
+      selector = options.selector, this.formBuilder = options.formBuilder, this.formType = (ref = options.formType) != null ? ref : 'multi', this.bootstrapData = options.bootstrapData;
       if (selector != null) {
         this.setElement($(selector));
       }
+      Formbuilder.formType = this.formType;
       this.collection = new FormbuilderCollection;
       this.collection.bind('add', this.addOne, this);
       this.collection.bind('reset', this.reset, this);
@@ -291,22 +289,25 @@
     };
 
     BuilderView.prototype.bindSaveEvent = function() {
-      var _this = this;
       this.formSaved = true;
       this.saveFormButton = this.$el.find(".js-save-form");
       this.saveFormButton.attr('disabled', true).text(Formbuilder.options.dict.ALL_CHANGES_SAVED);
       if (!!Formbuilder.options.AUTOSAVE) {
-        setInterval(function() {
-          return _this.saveForm.call(_this);
-        }, 5000);
+        setInterval((function(_this) {
+          return function() {
+            return _this.saveForm.call(_this);
+          };
+        })(this), 5000);
       }
-      return $(window).bind('beforeunload', function() {
-        if (_this.formSaved) {
-          return void 0;
-        } else {
-          return Formbuilder.options.dict.UNSAVED_CHANGES;
-        }
-      });
+      return $(window).bind('beforeunload', (function(_this) {
+        return function() {
+          if (_this.formSaved) {
+            return void 0;
+          } else {
+            return Formbuilder.options.dict.UNSAVED_CHANGES;
+          }
+        };
+      })(this));
     };
 
     BuilderView.prototype.reset = function() {
@@ -315,7 +316,7 @@
     };
 
     BuilderView.prototype.render = function() {
-      var subview, _i, _len, _ref5;
+      var j, len, ref, subview;
       this.$el.html(Formbuilder.templates['page']());
       this.$fbLeft = this.$el.find('.fb-left');
       this.$responseFields = this.$el.find('.fb-response-fields');
@@ -323,9 +324,9 @@
       this.$inputPreview = this.$el.find('#textInputs');
       this.bindWindowScrollEvent();
       this.hideShowNoResponseFields();
-      _ref5 = this.SUBVIEWS;
-      for (_i = 0, _len = _ref5.length; _i < _len; _i++) {
-        subview = _ref5[_i];
+      ref = this.SUBVIEWS;
+      for (j = 0, len = ref.length; j < len; j++) {
+        subview = ref[j];
         new subview({
           parentView: this
         }).render();
@@ -334,18 +335,19 @@
     };
 
     BuilderView.prototype.bindWindowScrollEvent = function() {
-      var _this = this;
-      return $(window).on('scroll', function() {
-        var maxMargin, newMargin;
-        if (_this.$fbLeft.data('locked') === true) {
-          return;
-        }
-        newMargin = Math.max(0, $(window).scrollTop() - _this.$el.offset().top);
-        maxMargin = _this.$responseFields.height();
-        return _this.$fbLeft.css({
-          'margin-top': Math.min(maxMargin, newMargin)
-        });
-      });
+      return $(window).on('scroll', (function(_this) {
+        return function() {
+          var maxMargin, newMargin;
+          if (_this.$fbLeft.data('locked') === true) {
+            return;
+          }
+          newMargin = Math.max(0, $(window).scrollTop() - _this.$el.offset().top);
+          maxMargin = _this.$responseFields.height();
+          return _this.$fbLeft.css({
+            'margin-top': Math.min(maxMargin, newMargin)
+          });
+        };
+      })(this));
     };
 
     BuilderView.prototype.showTab = function(e) {
@@ -382,48 +384,52 @@
     };
 
     BuilderView.prototype.setSortable = function() {
-      var _this = this;
       if (this.$responseFields.hasClass('ui-sortable')) {
         this.$responseFields.sortable('destroy');
       }
       this.$responseFields.sortable({
         forcePlaceholderSize: true,
         placeholder: 'sortable-placeholder',
-        stop: function(e, ui) {
-          var rf;
-          if (ui.item.data('control')) {
-            rf = _this.collection.create(Formbuilder.helpers.defaultFieldAttrs(ui.item.data('control')), {
-              $replaceEl: ui.item
-            });
-            _this.createAndShowEditView(rf);
-          }
-          _this.handleFormUpdate();
-          return true;
-        },
-        update: function(e, ui) {
-          if (!ui.item.data('control')) {
-            return _this.ensureEditViewScrolled();
-          }
-        }
+        stop: (function(_this) {
+          return function(e, ui) {
+            var rf;
+            if (ui.item.data('control')) {
+              rf = _this.collection.create(Formbuilder.helpers.defaultFieldAttrs(ui.item.data('control')), {
+                $replaceEl: ui.item
+              });
+              _this.createAndShowEditView(rf);
+            }
+            _this.handleFormUpdate();
+            return true;
+          };
+        })(this),
+        update: (function(_this) {
+          return function(e, ui) {
+            if (!ui.item.data('control')) {
+              return _this.ensureEditViewScrolled();
+            }
+          };
+        })(this)
       });
       return this.setDraggable();
     };
 
     BuilderView.prototype.setDraggable = function() {
-      var $addFieldButtons,
-        _this = this;
+      var $addFieldButtons;
       $addFieldButtons = this.$el.find("[data-control]");
       return $addFieldButtons.draggable({
         connectToSortable: this.$responseFields,
-        helper: function() {
-          var $helper;
-          $helper = $("<div class='response-field-draggable-helper' />");
-          $helper.css({
-            width: _this.$responseFields.width(),
-            height: '80px'
-          });
-          return $helper;
-        }
+        helper: (function(_this) {
+          return function() {
+            var $helper;
+            $helper = $("<div class='response-field-draggable-helper' />");
+            $helper.css({
+              width: _this.$responseFields.width(),
+              height: '80px'
+            });
+            return $helper;
+          };
+        })(this)
       });
     };
 
@@ -482,14 +488,15 @@
     };
 
     BuilderView.prototype.scrollLeftWrapper = function($responseFieldEl) {
-      var _this = this;
       this.unlockLeftWrapper();
       if (!$responseFieldEl[0]) {
         return;
       }
-      return $.scrollWindowTo((this.$el.offset().top + $responseFieldEl.offset().top) - this.$responseFields.offset().top, 200, function() {
-        return _this.lockLeftWrapper();
-      });
+      return $.scrollWindowTo((this.$el.offset().top + $responseFieldEl.offset().top) - this.$responseFields.offset().top, 200, (function(_this) {
+        return function() {
+          return _this.lockLeftWrapper();
+        };
+      })(this));
     };
 
     BuilderView.prototype.lockLeftWrapper = function() {
@@ -509,7 +516,7 @@
     };
 
     BuilderView.prototype.saveForm = function(e) {
-      var id, jsonFields, key, lstName, payload, _i, _len;
+      var id, j, jsonFields, key, len, lstName, payload;
       if (this.formSaved) {
         return;
       }
@@ -518,8 +525,8 @@
       this.collection.sort();
       jsonFields = this.collection.toJSON();
       lstName = {};
-      for (_i = 0, _len = jsonFields.length; _i < _len; _i++) {
-        key = jsonFields[_i];
+      for (j = 0, len = jsonFields.length; j < len; j++) {
+        key = jsonFields[j];
         id = key.name;
         key.extraClasses = key.extraClasses ? key.extraClasses.split(' ') : [];
         if (id) {
@@ -539,26 +546,27 @@
     };
 
     BuilderView.prototype.doAjaxSave = function(payload) {
-      var _this = this;
       return $.ajax({
         url: Formbuilder.options.HTTP_ENDPOINT,
         type: Formbuilder.options.HTTP_METHOD,
         data: payload,
         contentType: "application/json",
-        success: function(data) {
-          var datum, _i, _len, _ref5;
-          _this.updatingBatch = true;
-          for (_i = 0, _len = data.length; _i < _len; _i++) {
-            datum = data[_i];
-            if ((_ref5 = _this.collection.get(datum.cid)) != null) {
-              _ref5.set({
-                id: datum.id
-              });
+        success: (function(_this) {
+          return function(data) {
+            var datum, j, len, ref;
+            _this.updatingBatch = true;
+            for (j = 0, len = data.length; j < len; j++) {
+              datum = data[j];
+              if ((ref = _this.collection.get(datum.cid)) != null) {
+                ref.set({
+                  id: datum.id
+                });
+              }
+              _this.collection.trigger('sync');
             }
-            _this.collection.trigger('sync');
-          }
-          return _this.updatingBatch = void 0;
-        }
+            return _this.updatingBatch = void 0;
+          };
+        })(this)
       });
     };
 
@@ -569,7 +577,7 @@
   Formbuilder = (function() {
     Formbuilder.helpers = {
       defaultFieldAttrs: function(control) {
-        var attrs, _base;
+        var attrs, base;
         attrs = {};
         attrs[Formbuilder.options.mappings.LABEL] = 'Untitled';
         attrs[Formbuilder.options.mappings.LABEL_COL] = '7';
@@ -581,7 +589,7 @@
         attrs['field_options'] = {
           size: '-sm'
         };
-        return (typeof (_base = Formbuilder.fields[control]).defaultAttributes === "function" ? _base.defaultAttributes(attrs) : void 0) || attrs;
+        return (typeof (base = Formbuilder.fields[control]).defaultAttributes === "function" ? base.defaultAttributes(attrs) : void 0) || attrs;
       },
       simple_format: function(x) {
         return x != null ? x.replace(/\n/g, '<br />') : void 0;
@@ -623,23 +631,29 @@
       }
     };
 
+    Formbuilder.formType = '';
+
     Formbuilder.fields = {};
 
     Formbuilder.inputFields = {};
 
     Formbuilder.nonInputFields = {};
 
+    Formbuilder.resultFields = {};
+
     Formbuilder.registerField = function(name, opts) {
-      var x, _i, _len, _ref5;
-      _ref5 = ['view', 'edit'];
-      for (_i = 0, _len = _ref5.length; _i < _len; _i++) {
-        x = _ref5[_i];
+      var j, len, ref, x;
+      ref = ['view', 'edit'];
+      for (j = 0, len = ref.length; j < len; j++) {
+        x = ref[j];
         opts[x] = _.template(opts[x]);
       }
       opts.control = name;
       Formbuilder.fields[name] = opts;
       if (opts.type === 'non_input') {
         return Formbuilder.nonInputFields[name] = opts;
+      } else if (opts.type === 'result') {
+        return Formbuilder.resultFields[name] = opts;
       } else {
         return Formbuilder.inputFields[name] = opts;
       }
@@ -685,7 +699,7 @@
   Formbuilder.registerField('checkbox', {
     order: 10,
     view: "<div class='checkbox'>\n  <label class='fb-option'>\n    <input type='checkbox'/>\n  </label>\n</div>\n",
-    edit: "",
+    edit: "  ",
     addButton: "<span class=\"symbol\"><span class=\"fa fa-square-o\"></span></span> Checkboxes"
   });
 
@@ -808,6 +822,21 @@
 }).call(this);
 
 (function() {
+  Formbuilder.registerField('resultValue', {
+    order: 16,
+    type: 'result',
+    view: "<p class='rf-size<%= rf.get(Formbuilder.options.mappings.SIZE) %>'><%= rf.get(Formbuilder.options.mappings.LABEL) %></p>",
+    edit: "<%= Formbuilder.templates['edit/size']() %>\n<%= Formbuilder.templates['edit/min_max_length']() %>",
+    addButton: "<i class=\"fa fa-calculator symbol\" aria-hidden=\"true\"></i> Result Value",
+    defaultAttributes: function(attrs) {
+      attrs.field_options.size = 'small';
+      return attrs;
+    }
+  });
+
+}).call(this);
+
+(function() {
   Formbuilder.registerField('section_break', {
     order: 0,
     type: 'non_input',
@@ -832,7 +861,7 @@
   Formbuilder.registerField('website', {
     order: 35,
     view: "<input type='text' placeholder='http://' />",
-    edit: "",
+    edit: "  ",
     addButton: "<span class=\"symbol\"><span class=\"fa fa-link\"></span></span> Website"
   });
 
@@ -840,29 +869,6 @@
 
 this["Formbuilder"] = this["Formbuilder"] || {};
 this["Formbuilder"]["templates"] = this["Formbuilder"]["templates"] || {};
-
-this["Formbuilder"]["templates"]["edit/base"] = function(obj) {
-obj || (obj = {});
-var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
-function print() { __p += __j.call(arguments, '') }
-with (obj) {
-
- if (rf.get(Formbuilder.options.mappings.CONTROL) === 'paragraph') { ;
-__p += '\n  ' +
-((__t = ( Formbuilder.templates['edit/paragraph']({rf: rf}) )) == null ? '' : __t) +
-'\n';
- } else { ;
-__p += '\n  ' +
-((__t = ( Formbuilder.templates['edit/common']() )) == null ? '' : __t) +
-'\n  ' +
-((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.CONTROL)].edit({rf: rf}) )) == null ? '' : __t) +
-'\n';
- } ;
-__p += '\n';
-
-}
-return __p
-};
 
 this["Formbuilder"]["templates"]["edit/base_header"] = function(obj) {
 obj || (obj = {});
@@ -889,6 +895,29 @@ __p +=
 '\n' +
 ((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.CONTROL)].edit({rf: rf}) )) == null ? '' : __t) +
 '\n';
+
+}
+return __p
+};
+
+this["Formbuilder"]["templates"]["edit/base"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+
+ if (rf.get(Formbuilder.options.mappings.CONTROL) === 'paragraph') { ;
+__p += '\n  ' +
+((__t = ( Formbuilder.templates['edit/paragraph']({rf: rf}) )) == null ? '' : __t) +
+'\n';
+ } else { ;
+__p += '\n  ' +
+((__t = ( Formbuilder.templates['edit/common']() )) == null ? '' : __t) +
+'\n  ' +
+((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.CONTROL)].edit({rf: rf}) )) == null ? '' : __t) +
+'\n';
+ } ;
+__p += '\n';
 
 }
 return __p
@@ -968,20 +997,6 @@ __p += '<input type=\'text\' data-rv-input=\'model.' +
 return __p
 };
 
-this["Formbuilder"]["templates"]["edit/min_max"] = function(obj) {
-obj || (obj = {});
-var __t, __p = '', __e = _.escape;
-with (obj) {
-__p += '<div class=\'fb-edit-section-header\'>Minimum / Maximum</div>\n\nAbove\n<input type="text" data-rv-input="model.' +
-((__t = ( Formbuilder.options.mappings.MIN )) == null ? '' : __t) +
-'" style="width: 30px" />\n\n&nbsp;&nbsp;\n\nBelow\n<input type="text" data-rv-input="model.' +
-((__t = ( Formbuilder.options.mappings.MAX )) == null ? '' : __t) +
-'" style="width: 30px" />\n';
-
-}
-return __p
-};
-
 this["Formbuilder"]["templates"]["edit/min_max_length"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
@@ -993,6 +1008,20 @@ __p += '<div class=\'fb-edit-section-header\'>Length Limit</div>\n\nMin\n<input 
 '" style="width: 30px" />\n\n&nbsp;&nbsp;\n\n<select data-rv-value="model.' +
 ((__t = ( Formbuilder.options.mappings.LENGTH_UNITS )) == null ? '' : __t) +
 '" style="width: auto;">\n  <option value="characters">characters</option>\n  <option value="words">words</option>\n</select>\n';
+
+}
+return __p
+};
+
+this["Formbuilder"]["templates"]["edit/min_max"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<div class=\'fb-edit-section-header\'>Minimum / Maximum</div>\n\nAbove\n<input type="text" data-rv-input="model.' +
+((__t = ( Formbuilder.options.mappings.MIN )) == null ? '' : __t) +
+'" style="width: 30px" />\n\n&nbsp;&nbsp;\n\nBelow\n<input type="text" data-rv-input="model.' +
+((__t = ( Formbuilder.options.mappings.MAX )) == null ? '' : __t) +
+'" style="width: 30px" />\n';
 
 }
 return __p
@@ -1130,7 +1159,21 @@ __p += '\n        <a data-control="' +
 ((__t = ( f.addButton )) == null ? '' : __t) +
 '\n        </a>\n      ';
  }); ;
-__p += '\n    </div>\n  </div>\n</div>\n';
+__p += '\n    </div>\n\n    ';
+ if (Formbuilder.formType === 'single') { ;
+__p += '\n      <div class=\'section\'>\n        ';
+ _.each(_.sortBy(Formbuilder.resultFields, 'order'), function(f){ ;
+__p += '\n          <a data-control="' +
+((__t = ( f.control )) == null ? '' : __t) +
+'" class="' +
+((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
+'">\n            ' +
+((__t = ( f.addButton )) == null ? '' : __t) +
+'\n          </a>\n        ';
+ }); ;
+__p += '\n      </div>\n    ';
+ } ;
+__p += '\n  </div>\n</div>\n';
 
 }
 return __p
@@ -1182,6 +1225,16 @@ __p += '<div class=\'fb-save-wrapper\'>\n  <button class=\'js-save-form ' +
 return __p
 };
 
+this["Formbuilder"]["templates"]["view/base_non_input"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '';
+
+}
+return __p
+};
+
 this["Formbuilder"]["templates"]["view/base"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
@@ -1204,16 +1257,6 @@ __p += '\n<div class=\'form-group\'>\n  <div class=\'cover\'></div>\n  ' +
 '\n</div>\n';
  } ;
 __p += '\n';
-
-}
-return __p
-};
-
-this["Formbuilder"]["templates"]["view/base_non_input"] = function(obj) {
-obj || (obj = {});
-var __t, __p = '', __e = _.escape;
-with (obj) {
-__p += '';
 
 }
 return __p
