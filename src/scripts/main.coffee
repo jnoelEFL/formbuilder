@@ -140,12 +140,13 @@ class BuilderView extends Backbone.View
     'mouseout .fb-add-controls': 'unlockLeftWrapper'
 
   initialize: (options) ->
-    {selector, @formBuilder, @bootstrapData} = options
+    {selector, @formBuilder, @formType = 'multi', @bootstrapData} = options
 
     # This is a terrible idea because it's not scoped to this view.
     if selector?
       @setElement $(selector)
 
+    Formbuilder.formType = @formType
     # Create the collection, and bind the appropriate events
     @collection = new FormbuilderCollection
     @collection.bind 'add', @addOne, @
@@ -426,9 +427,11 @@ class Formbuilder
       SAVE_FORM: 'Save form'
       UNSAVED_CHANGES: 'You have unsaved changes. If you leave this page, you will lose those changes!'
 
+  @formType: ''
   @fields: {}
   @inputFields: {}
   @nonInputFields: {}
+  @resultFields: {}
 
   @registerField: (name, opts) ->
     for x in ['view', 'edit']
@@ -440,6 +443,8 @@ class Formbuilder
 
     if opts.type == 'non_input'
       Formbuilder.nonInputFields[name] = opts
+    else if opts.type == 'result'
+      Formbuilder.resultFields[name] = opts
     else
       Formbuilder.inputFields[name] = opts
 

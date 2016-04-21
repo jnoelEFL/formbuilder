@@ -17,5 +17,15 @@
         </a>
       <% }); %>
     </div>
+
+    <% if (Formbuilder.formType === 'single') { %>
+      <div class='section'>
+        <% _.each(_.sortBy(Formbuilder.resultFields, 'order'), function(f){ %>
+          <a data-control="<%= f.control %>" class="<%= Formbuilder.options.BUTTON_CLASS %>">
+            <%= f.addButton %>
+          </a>
+        <% }); %>
+      </div>
+    <% } %>
   </div>
 </div>
