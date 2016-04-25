@@ -534,29 +534,63 @@
     };
 
     BuilderView.prototype.saveForm = function(e) {
-      var id, j, jsonFields, key, len, lstName, payload;
+      var codePart, fieldPart, id, inputFieldsPretty, inputPretty, j, jsonInputField, jsonOutputField, k, key, len, len1, lstInputName, lstOutputName, outputFieldsPretty, outputPretty, payload;
       if (this.formSaved) {
         return;
       }
       this.formSaved = true;
       this.saveFormButton.attr('disabled', true).text(Formbuilder.options.dict.ALL_CHANGES_SAVED);
       this.collection.sort();
-      jsonFields = this.collection.toJSON();
-      lstName = {};
-      for (j = 0, len = jsonFields.length; j < len; j++) {
-        key = jsonFields[j];
-        id = key.name;
-        key.extraClasses = key.extraClasses ? key.extraClasses.split(' ') : [];
+      jsonOutputField = [];
+      jsonInputField = [];
+      this.collection.each(function(field) {
+        if (field.is_result()) {
+          jsonOutputField.push(field);
+        }
+        if (field.is_input()) {
+          return jsonInputField.push(field);
+        }
+      });
+      lstInputName = {};
+      lstOutputName = {};
+      for (j = 0, len = jsonInputField.length; j < len; j++) {
+        key = jsonInputField[j];
+        id = key.attributes.name;
+        if (typeof key.attributes.extraClasses === 'string') {
+          key.attributes.extraClasses = key.attributes.extraClasses.split(' ');
+        } else {
+          key.attributes.extraClasses = [];
+        }
         if (id) {
-          lstName[id] = '';
+          lstInputName[id] = '';
+        }
+      }
+      for (k = 0, len1 = jsonOutputField.length; k < len1; k++) {
+        key = jsonOutputField[k];
+        id = key.attributes.name;
+        if (typeof key.attributes.extraClasses === 'string') {
+          key.attributes.extraClasses = key.attributes.extraClasses.split(' ');
+        } else {
+          key.attributes.extraClasses = [];
+        }
+        if (id) {
+          lstOutputName[id] = '';
         }
       }
       payload = {
-        fields: jsonFields,
-        inputs: lstName
+        inputFields: jsonInputField,
+        outputFields: jsonOutputField,
+        inputs: lstInputName,
+        outputs: lstOutputName
       };
-      this.$codePreview.val(JSON.stringify(payload.fields, void 0, 4));
-      this.$inputPreview.val(JSON.stringify(payload.inputs, void 0, 4));
+      inputFieldsPretty = JSON.stringify(payload.inputFields, void 0, 4);
+      outputFieldsPretty = JSON.stringify(payload.outputFields, void 0, 4);
+      codePart = "Input = " + inputFieldsPretty + ", Output = " + outputFieldsPretty;
+      this.$codePreview.val(codePart);
+      inputPretty = JSON.stringify(payload.inputs, void 0, 4);
+      outputPretty = JSON.stringify(payload.outputs, void 0, 4);
+      fieldPart = "Input = " + inputPretty + ", Output = " + outputPretty;
+      this.$inputPreview.val(fieldPart);
       if (Formbuilder.options.HTTP_ENDPOINT) {
         this.doAjaxSave(payload);
       }
@@ -1159,7 +1193,9 @@ __p += '<div class=\'fb-common-wrapper\'>\n  ' +
 ((__t = ( Formbuilder.templates['edit/name']() )) == null ? '' : __t) +
 '\n</div>\n<div class=\'fb-edit-section-header\'>Label</div>\n<input type=\'text\' data-rv-input=\'model.' +
 ((__t = ( Formbuilder.options.mappings.LABEL )) == null ? '' : __t) +
-'\' />\n' +
+'\' />\n<div class=\'fb-common-wrapper\'>\n  ' +
+((__t = ( Formbuilder.templates['edit/extraClasses']() )) == null ? '' : __t) +
+'\n</div>\n' +
 ((__t = ( Formbuilder.templates['edit/units']() )) == null ? '' : __t) +
 '\n';
 

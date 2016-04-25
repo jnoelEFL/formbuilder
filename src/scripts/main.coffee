@@ -353,22 +353,47 @@ class BuilderView extends Backbone.View
     @saveFormButton.attr('disabled', true).text(Formbuilder.options.dict.ALL_CHANGES_SAVED)
     @collection.sort()
 
-    jsonFields = @collection.toJSON()
+    jsonOutputField = []
+    jsonInputField = []
 
-    lstName = {}
+    @collection.each((field) ->
+      if (field.is_result()) then jsonOutputField.push(field)
+      if (field.is_input()) then jsonInputField.push(field)
+    )
 
-    for key in jsonFields
-      id = key.name
-      key.extraClasses = if key.extraClasses then key.extraClasses.split(' ') else []
-      if id then lstName[id] = ''
+    lstInputName = {}
+    lstOutputName = {}
+
+    for key in jsonInputField
+      id = key.attributes.name
+      if typeof key.attributes.extraClasses is 'string'
+      then key.attributes.extraClasses = key.attributes.extraClasses.split(' ')
+      else key.attributes.extraClasses =  []
+      if id then lstInputName[id] = ''
+
+    for key in jsonOutputField
+      id = key.attributes.name
+      if typeof key.attributes.extraClasses is 'string'
+      then key.attributes.extraClasses = key.attributes.extraClasses.split(' ')
+      else key.attributes.extraClasses =  []
+      if id then lstOutputName[id] = ''
 
     payload =
-      fields: jsonFields
-      inputs: lstName
+      inputFields: jsonInputField
+      outputFields: jsonOutputField
+      inputs: lstInputName
+      outputs: lstOutputName
 
-    @$codePreview.val(JSON.stringify payload.fields, undefined, 4)
+    inputFieldsPretty = JSON.stringify payload.inputFields, undefined, 4
+    outputFieldsPretty = JSON.stringify payload.outputFields, undefined, 4
+    codePart = "Input = #{inputFieldsPretty}, Output = #{outputFieldsPretty}"
+    @$codePreview.val(codePart)
 
-    @$inputPreview.val(JSON.stringify payload.inputs, undefined, 4)
+    inputPretty = JSON.stringify payload.inputs, undefined, 4
+    outputPretty = JSON.stringify payload.outputs, undefined, 4
+    fieldPart = "Input = #{inputPretty}, Output = #{outputPretty}"
+
+    @$inputPreview.val(fieldPart)
 
     if Formbuilder.options.HTTP_ENDPOINT then @doAjaxSave(payload)
     @formBuilder.trigger 'save', payload

@@ -93,7 +93,7 @@
 
       fb.on('save', function(payload){
         console.log(payload);
-        $('#fields').val(JSON.stringify(payload.fields));
+        $('#fields').val(JSON.stringify(payload.inputFields));
         $('#inputsName').val(JSON.stringify(payload.inputs));
       })
     });
