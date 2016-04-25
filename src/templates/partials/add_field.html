@@ -18,7 +18,7 @@
       <% }); %>
     </div>
 
-    <% if (Formbuilder.formType === 'single') { %>
+    <% if (Formbuilder.formType === 'SINGLE_PAGE') { %>
       <div class='section'>
         <% _.each(_.sortBy(Formbuilder.resultFields, 'order'), function(f){ %>
           <a data-control="<%= f.control %>" class="<%= Formbuilder.options.BUTTON_CLASS %>">

@@ -1261,7 +1261,7 @@ __p += '\n        <a data-control="' +
 '\n        </a>\n      ';
  }); ;
 __p += '\n    </div>\n\n    ';
- if (Formbuilder.formType === 'single') { ;
+ if (Formbuilder.formType === 'SINGLE_PAGE') { ;
 __p += '\n      <div class=\'section\'>\n        ';
  _.each(_.sortBy(Formbuilder.resultFields, 'order'), function(f){ ;
 __p += '\n          <a data-control="' +
