@@ -534,7 +534,7 @@
     };
 
     BuilderView.prototype.saveForm = function(e) {
-      var codePart, fieldPart, id, inputFieldsPretty, inputPretty, j, jsonInputField, jsonOutputField, k, key, len, len1, lstInputName, lstOutputName, outputFieldsPretty, outputPretty, payload;
+      var fieldPart, id, inputPretty, j, jsonInputField, jsonOutputField, k, key, len, len1, lstInputName, lstOutputName, outputPretty, payload;
       if (this.formSaved) {
         return;
       }
@@ -578,15 +578,11 @@
         }
       }
       payload = {
-        inputFields: jsonInputField,
-        outputFields: jsonOutputField,
+        screenFields: this.collection.toJSON(),
         inputs: lstInputName,
         outputs: lstOutputName
       };
-      inputFieldsPretty = JSON.stringify(payload.inputFields, void 0, 4);
-      outputFieldsPretty = JSON.stringify(payload.outputFields, void 0, 4);
-      codePart = "Input = " + inputFieldsPretty + ", Output = " + outputFieldsPretty;
-      this.$codePreview.val(codePart);
+      this.$codePreview.val(JSON.stringify(payload.screenFields, void 0, 4));
       inputPretty = JSON.stringify(payload.inputs, void 0, 4);
       outputPretty = JSON.stringify(payload.outputs, void 0, 4);
       fieldPart = "Input = " + inputPretty + ", Output = " + outputPretty;
