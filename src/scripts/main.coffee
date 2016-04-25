@@ -379,15 +379,11 @@ class BuilderView extends Backbone.View
       if id then lstOutputName[id] = ''
 
     payload =
-      inputFields: jsonInputField
-      outputFields: jsonOutputField
+      screenFields: @collection.toJSON()
       inputs: lstInputName
       outputs: lstOutputName
 
-    inputFieldsPretty = JSON.stringify payload.inputFields, undefined, 4
-    outputFieldsPretty = JSON.stringify payload.outputFields, undefined, 4
-    codePart = "Input = #{inputFieldsPretty}, Output = #{outputFieldsPretty}"
-    @$codePreview.val(codePart)
+    @$codePreview.val(JSON.stringify payload.screenFields, undefined, 4)
 
     inputPretty = JSON.stringify payload.inputs, undefined, 4
     outputPretty = JSON.stringify payload.outputs, undefined, 4
