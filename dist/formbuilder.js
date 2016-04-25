@@ -843,8 +843,8 @@
   Formbuilder.registerField('resultValue', {
     order: 16,
     type: 'result',
-    view: "<span class=''><strong>&#9839;{<%= rf.get(Formbuilder.options.mappings.NAME) %>}</strong></span>",
-    edit: "<%= Formbuilder.templates['edit/size']() %>",
+    view: "<span class=''>\n  <strong>\n    &#9839;{<%= rf.get(Formbuilder.options.mappings.NAME) %>}\n    <%= rf.get(Formbuilder.options.mappings.UNITS) %>\n  </strong>\n</span>",
+    edit: "<%= Formbuilder.templates['edit/resultValue']() %>",
     addButton: "<span class=\"symbol\"><i class=\"fa fa-calculator\" aria-hidden=\"true\"></i></span> Result Value"
   });
 
@@ -857,6 +857,17 @@
     view: "<label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>\n<p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>",
     edit: "<div class='fb-edit-section-header'>Label</div>\n<input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />\n<textarea data-rv-input='model.<%= Formbuilder.options.mappings.DESCRIPTION %>'\n  placeholder='Add a longer description to this field'></textarea>",
     addButton: "<span class='symbol'><i class='fa fa-minus' aria-hidden=\"true\"></i></span> Section Break"
+  });
+
+}).call(this);
+
+(function() {
+  Formbuilder.registerField('resultLabel', {
+    order: 17,
+    type: 'result',
+    view: "<label class=\"col-sm-7 control-label\"><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>\n<p class='form-control-static input<%= rf.get(Formbuilder.options.mappings.SIZE) %>'>\n  <strong>&#9839;{<%= rf.get(Formbuilder.options.mappings.NAME) %>} <%= rf.get(Formbuilder.options.mappings.UNITS) %></strong>\n</p>",
+    edit: "<%= Formbuilder.templates['edit/staticControl']() %>",
+    addButton: "<span class='symbol'><i class='fa fa-font' aria-hidden=\"true\"></i></span> Label+Result"
   });
 
 }).call(this);
@@ -918,11 +929,9 @@ this["Formbuilder"]["templates"]["edit/base_result"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'fb-common-wrapper\'>\n  ' +
-((__t = ( Formbuilder.templates['edit/name']() )) == null ? '' : __t) +
-'\n</div>\n<div class=\'fb-common-wrapper\'>\n  ' +
-((__t = ( Formbuilder.templates['edit/extraClasses']() )) == null ? '' : __t) +
-'\n</div>\n';
+__p +=
+((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.CONTROL)].edit({rf: rf}) )) == null ? '' : __t) +
+'\n';
 
 }
 return __p
@@ -1017,7 +1026,7 @@ __p += '<input type=\'text\' data-rv-input=\'model.' +
 ((__t = ( Formbuilder.options.mappings.LABEL )) == null ? '' : __t) +
 '\' />\n<textarea data-rv-input=\'model.' +
 ((__t = ( Formbuilder.options.mappings.DESCRIPTION )) == null ? '' : __t) +
-'\'\n  placeholder=\'Add a longer description to this field\'></textarea>\n<label for="selectLabelColSize">Label Column Size</label>\n<select id="selectLabelColSize" data-rv-value="model.' +
+'\'\n  placeholder=\'Add a longer description to this field\'></textarea>\n<br/>\n<label for="selectLabelColSize">Label Column Size</label>\n<select id="selectLabelColSize" data-rv-value="model.' +
 ((__t = ( Formbuilder.options.mappings.LABEL_COL )) == null ? '' : __t) +
 '">\n  <option value="1">1</option>\n  <option value="2">2</option>\n  <option value="3">3</option>\n  <option value="4">4</option>\n  <option value="5">5</option>\n  <option value="6">6</option>\n  <option value="7">7</option>\n  <option value="8">8</option>\n  <option value="9">9</option>\n  <option value="10">10</option>\n  <option value="11">11</option>\n  <option value="12">12</option>\n</select>\n';
 
@@ -1122,7 +1131,9 @@ __p += '<div class=\'fb-common-wrapper\'>\n  ' +
 ((__t = ( Formbuilder.templates['edit/name']() )) == null ? '' : __t) +
 '\n</div>\n<div class=\'fb-common-wrapper\'>\n  ' +
 ((__t = ( Formbuilder.templates['edit/extraClasses']() )) == null ? '' : __t) +
-'\n</div>\n';
+'\n</div>\n' +
+((__t = ( Formbuilder.templates['edit/units']() )) == null ? '' : __t) +
+'\n';
 
 }
 return __p
@@ -1135,6 +1146,22 @@ with (obj) {
 __p += '<div class=\'fb-edit-section-header\'>Size</div>\n<select data-rv-value="model.' +
 ((__t = ( Formbuilder.options.mappings.SIZE )) == null ? '' : __t) +
 '">\n  <option value="-sm">Small</option>\n  <option value="-md">Medium</option>\n  <option value="-lg">Large</option>\n</select>\n';
+
+}
+return __p
+};
+
+this["Formbuilder"]["templates"]["edit/staticControl"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<div class=\'fb-common-wrapper\'>\n  ' +
+((__t = ( Formbuilder.templates['edit/name']() )) == null ? '' : __t) +
+'\n</div>\n<div class=\'fb-edit-section-header\'>Label</div>\n<input type=\'text\' data-rv-input=\'model.' +
+((__t = ( Formbuilder.options.mappings.LABEL )) == null ? '' : __t) +
+'\' />\n' +
+((__t = ( Formbuilder.templates['edit/units']() )) == null ? '' : __t) +
+'\n';
 
 }
 return __p
@@ -1277,9 +1304,11 @@ this["Formbuilder"]["templates"]["view/base_result"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p +=
+__p += '<div class=\'form-group\'>\n  <div class=\'cover\'></div>\n  ' +
 ((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.CONTROL)].view({rf: rf}) )) == null ? '' : __t) +
-'\n';
+'\n\n  ' +
+((__t = ( Formbuilder.templates['view/duplicate_remove']({rf: rf}) )) == null ? '' : __t) +
+'\n</div>\n';
 
 }
 return __p

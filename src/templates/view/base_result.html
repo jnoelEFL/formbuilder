@@ -1,1 +1,6 @@
-<%= Formbuilder.fields[rf.get(Formbuilder.options.mappings.CONTROL)].view({rf: rf}) %>
+<div class='form-group'>
+  <div class='cover'></div>
+  <%= Formbuilder.fields[rf.get(Formbuilder.options.mappings.CONTROL)].view({rf: rf}) %>
+
+  <%= Formbuilder.templates['view/duplicate_remove']({rf: rf}) %>
+</div>

@@ -5,11 +5,16 @@ Formbuilder.registerField 'resultValue',
   type: 'result'
 
   view: """
-    <span class=''><strong>&#9839;{<%= rf.get(Formbuilder.options.mappings.NAME) %>}</strong></span>
+    <span class=''>
+      <strong>
+        &#9839;{<%= rf.get(Formbuilder.options.mappings.NAME) %>}
+        <%= rf.get(Formbuilder.options.mappings.UNITS) %>
+      </strong>
+    </span>
   """
 
   edit: """
-    <%= Formbuilder.templates['edit/size']() %>
+    <%= Formbuilder.templates['edit/resultValue']() %>
   """
 
   addButton: """

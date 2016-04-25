@@ -1,6 +1,1 @@
-<div class='fb-common-wrapper'>
-  <%= Formbuilder.templates['edit/name']() %>
-</div>
-<div class='fb-common-wrapper'>
-  <%= Formbuilder.templates['edit/extraClasses']() %>
-</div>
+<%= Formbuilder.fields[rf.get(Formbuilder.options.mappings.CONTROL)].edit({rf: rf}) %>
